@@ -8,4 +8,4 @@ Included is...
 - A collection of scripts for a 3D first-person or third-person game
 - A Dialogue System for use in 2D or 3D
 
-All scripts were written by Logan Kemper unless otherwise mentioned.
+All scripts were written by Logan Kemper unless noted otherwise.
