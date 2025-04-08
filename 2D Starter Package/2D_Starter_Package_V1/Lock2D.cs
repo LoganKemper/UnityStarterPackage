@@ -1,10 +1,14 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
 /// Add to a GameObject with a trigger collider to create a lock that can only be unlocked if the player has the requisite item(s) in their inventory.
 /// </summary>
-public class Lock : MonoBehaviour
+public class Lock2D : MonoBehaviour
 {
     [Tooltip("Enter the tag name that should register collisions.")]
     [SerializeField] private string tagName;

@@ -1,10 +1,14 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
 /// Generic script for adding UnityEvents to button presses.
 /// </summary>
-public class ButtonEvents : MonoBehaviour
+public class ButtonEvents2D : MonoBehaviour
 {
     [Tooltip("Enter the tag name that should register triggers. Leave blank for any tag to be used.")]
     [SerializeField] private string tagName;

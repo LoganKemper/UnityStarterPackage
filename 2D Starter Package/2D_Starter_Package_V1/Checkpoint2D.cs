@@ -1,3 +1,7 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -5,7 +9,7 @@ using UnityEngine.Events;
 /// Used to update the player's respawn position. Attach this to a GameObject with a 2D collider set to trigger. 
 /// Alternatively, call SetRespawnPoint from a UnityEvent.
 /// </summary>
-public class Checkpoint : MonoBehaviour
+public class Checkpoint2D : MonoBehaviour
 {
     [Tooltip("Assign the respawn point GameObject.")]
     [SerializeField] private Transform respawn;

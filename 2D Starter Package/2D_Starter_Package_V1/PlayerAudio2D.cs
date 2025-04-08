@@ -1,10 +1,14 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 
 /// <summary>
 /// Adds sound effects to PlayerMovement.
 /// </summary>
-[RequireComponent(typeof(PlayerMovement))]
-public class PlayerAudio : MonoBehaviour
+[RequireComponent(typeof(PlayerMovement2D))]
+public class PlayerAudio2D : MonoBehaviour
 {
     [Header("Audio Sources")]
     [Tooltip("Assign an AudioSource for the jump sounds.")]
@@ -29,11 +33,11 @@ public class PlayerAudio : MonoBehaviour
     [Tooltip("Optional: Sound effect for the player dashing.")]
     [SerializeField] private AudioClip dashSound;
 
-    private PlayerMovement playerMovement;
+    private PlayerMovement2D playerMovement;
 
     private void Awake()
     {
-        playerMovement = GetComponent<PlayerMovement>();
+        playerMovement = GetComponent<PlayerMovement2D>();
 
         // Subscribe to player movement events
         playerMovement.OnJump += PlayJumpSound;

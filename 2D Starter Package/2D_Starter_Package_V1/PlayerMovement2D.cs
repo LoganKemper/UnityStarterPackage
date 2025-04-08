@@ -1,9 +1,13 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 
 /// <summary>
 /// A basic player controller with simple running and jumping behavior.
 /// </summary>
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement2D : MonoBehaviour
 {
     [Tooltip("Drag in the player's animator to play animations for running and jumping.")]
     [SerializeField] protected Animator animator;

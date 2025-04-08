@@ -1,10 +1,14 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using System.Collections;
 using UnityEngine;
 
 /// <summary>
 /// Changes a SpriteRenderer to a new color, then back to the original color.
 /// </summary>
-public class FlashColor : MonoBehaviour
+public class FlashColor2D : MonoBehaviour
 {
     [Tooltip("Drag in the SpriteRenderer component.")]
     [SerializeField] private SpriteRenderer spriteRenderer;

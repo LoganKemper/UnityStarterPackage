@@ -1,9 +1,13 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 
 /// <summary>
 /// Moves a GameObject back and forth between two positions. Can be used for platforms, NPCs, hazards, and more.
 /// </summary>
-public class PatrolSimple : MonoBehaviour
+public class PatrolSimple2D : MonoBehaviour
 {
     [Tooltip("The other position that this GameObject should move to.")]
     [SerializeField] private Transform pointB;

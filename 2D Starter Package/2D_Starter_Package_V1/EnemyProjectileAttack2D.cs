@@ -1,13 +1,17 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
 /// Launches projectile attacks towards the player. Can be used for mobile or stationary enemies.
 /// </summary>
-public class EnemyProjectileAttack : MonoBehaviour
+public class EnemyProjectileAttack2D : MonoBehaviour
 {
     [Tooltip("Drag in the projectile prefab.")]
-    [SerializeField] private Projectile projectile;
+    [SerializeField] private Projectile2D projectile;
 
     [Tooltip("The position that the projectile should spawn from. If null, this script will use the transform of the GameObject it's attached to.")]
     [SerializeField] private Transform launchTransform;
@@ -92,7 +96,7 @@ public class EnemyProjectileAttack : MonoBehaviour
             return;
         }
 
-        Projectile newProjectile;
+        Projectile2D newProjectile;
         Vector2 direction;
 
         // Choose where to launch the projectile from

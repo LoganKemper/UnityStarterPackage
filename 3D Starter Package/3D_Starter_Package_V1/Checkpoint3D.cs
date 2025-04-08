@@ -1,8 +1,12 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Used to update the player's respawn position. Attach this to a GameObject with a 2D collider set to trigger. 
+/// Used to update the player's respawn position. Attach this to a GameObject with a 3D collider set to trigger. 
 /// Alternatively, call SetRespawnPoint from a UnityEvent.
 /// </summary>
 public class Checkpoint3D : MonoBehaviour

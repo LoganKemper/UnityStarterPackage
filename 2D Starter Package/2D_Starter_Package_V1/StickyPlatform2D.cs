@@ -1,9 +1,13 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 
 /// <summary>
 /// Add to a moving platform to make GameObjects stick to its surface.
 /// </summary>
-public class StickyPlatform : MonoBehaviour
+public class StickyPlatform2D : MonoBehaviour
 {
     private Transform target = null;
     private Vector3 offset;

@@ -1,3 +1,7 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;

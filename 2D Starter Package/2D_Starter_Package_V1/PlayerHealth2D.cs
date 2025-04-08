@@ -1,3 +1,7 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -5,7 +9,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Gives the player health, dying, and respawning functionality.
 /// </summary>
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth2D : MonoBehaviour
 {
     [Tooltip("The player's maximum allowed health points.")]
     [SerializeField] private int maxHealth = 3;

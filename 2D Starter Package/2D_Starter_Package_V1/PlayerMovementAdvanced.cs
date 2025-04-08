@@ -1,10 +1,14 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// A more sophisticated player controller that extends PlayerMovement to add dashing and wall jumping functionality.
+/// A more sophisticated player controller that extends PlayerMovement2D to add dashing and wall jumping functionality.
 /// </summary>
-public class PlayerMovementAdvanced : PlayerMovement
+public class PlayerMovementAdvanced : PlayerMovement2D
 {
     [Header("Dash Settings")]
     [Tooltip("The force applied during a dash.")]

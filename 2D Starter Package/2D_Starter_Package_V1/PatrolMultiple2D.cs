@@ -1,3 +1,7 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +9,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Moves a GameObject to its assigned waypoints. Can be used for platforms, NPCs, hazards, and more.
 /// </summary>
-public class PatrolMultiple : MonoBehaviour
+public class PatrolMultiple2D : MonoBehaviour
 {
     [Header("Patrol System")]
     [Tooltip("The patrolling GameObject will move to each waypoint in order.")]

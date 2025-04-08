@@ -1,9 +1,13 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 
 /// <summary>
 /// Attach to a projectile prefab to give it launching and destroying behavior.
 /// </summary>
-public class Projectile : MonoBehaviour
+public class Projectile2D : MonoBehaviour
 {
     [Tooltip("Drag in the projectile's Rigidbody2D.")]
     [SerializeField] private Rigidbody2D m_Rigidbody2D;

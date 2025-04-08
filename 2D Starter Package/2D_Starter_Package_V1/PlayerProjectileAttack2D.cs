@@ -1,13 +1,17 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
 /// Gives the player a projectile attack.
 /// </summary>
-public class PlayerProjectileAttack : MonoBehaviour
+public class PlayerProjectileAttack2D : MonoBehaviour
 {
-    [Tooltip("Drag the projectile prefab in here. The projectile GameObject must have the Projectile component on it.")]
-    [SerializeField] private Projectile projectile;
+    [Tooltip("Drag the projectile prefab in here. The projectile GameObject must have the Projectile2D component on it.")]
+    [SerializeField] private Projectile2D projectile;
 
     [Tooltip("The position that the projectile should spawn from. It's usually a good idea to place it a little in front of the player.")]
     [SerializeField] private Transform launchTransform;
@@ -125,7 +129,7 @@ public class PlayerProjectileAttack : MonoBehaviour
         }
 
         // Create a new projectile
-        Projectile newProjectile = Instantiate(projectile, launchTransform.position, Quaternion.identity);
+        Projectile2D newProjectile = Instantiate(projectile, launchTransform.position, Quaternion.identity);
 
         if (playerTransform.localScale.x > 0) // Facing right
         {

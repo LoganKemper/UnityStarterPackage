@@ -1,10 +1,14 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
 /// Teleports the player to another location.
 /// </summary>
-public class Teleporter : MonoBehaviour
+public class Teleporter2D : MonoBehaviour
 {
     [Tooltip("Enter the player's tag name. Could be used for other tags as well.")]
     [SerializeField] private string tagName = "Player";

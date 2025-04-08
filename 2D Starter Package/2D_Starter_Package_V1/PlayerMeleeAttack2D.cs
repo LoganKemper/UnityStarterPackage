@@ -1,3 +1,7 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -5,7 +9,7 @@ using UnityEngine.Events;
 /// <summary>
 /// Gives the player a melee attack.
 /// </summary>
-public class PlayerMeleeAttack : MonoBehaviour
+public class PlayerMeleeAttack2D : MonoBehaviour
 {
     [Tooltip("Drag in the hitbox GameObject with a trigger collider on it here.")]
     [SerializeField] private Collider2D hitbox;

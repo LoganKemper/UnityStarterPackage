@@ -1,9 +1,13 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 
 /// <summary>
 /// Attach to the main camera to control its movement.
 /// </summary>
-public class CameraController : MonoBehaviour
+public class CameraController2D : MonoBehaviour
 {
     [Tooltip("The transform that the camera will follow.")]
     [SerializeField] private Transform target;

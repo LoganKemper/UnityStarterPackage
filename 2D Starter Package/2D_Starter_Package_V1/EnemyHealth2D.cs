@@ -1,3 +1,7 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,7 +10,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Gives enemies functionality for health, taking damage, and dropping items.
 /// </summary>
-public class EnemyHealth : MonoBehaviour
+public class EnemyHealth2D : MonoBehaviour
 {
     [Tooltip("How many times the enemy can get hit before being destroyed.")]
     [SerializeField] private int health = 3;

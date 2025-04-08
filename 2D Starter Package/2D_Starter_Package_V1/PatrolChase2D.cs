@@ -1,9 +1,13 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 
 /// <summary>
 /// PatrolChase inherits from PatrolMultiple to extend its functionality and add a chasing state.
 /// </summary>
-public class PatrolChase : PatrolMultiple
+public class PatrolChase2D : PatrolMultiple2D
 {
     [Header("Chase")]
     [Tooltip("Drag in the player GameObject.")]

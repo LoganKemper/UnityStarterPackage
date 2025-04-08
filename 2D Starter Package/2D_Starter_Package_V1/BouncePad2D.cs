@@ -1,10 +1,14 @@
+// Unity Starter Package - Version 1
+// University of Florida's Digital Worlds Institute
+// Written by Logan Kemper
+
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
 /// A bounce pad that applies an instant force to any GameObject with a Rigidbody2D that collides with it.
 /// </summary>
-public class BouncePad : MonoBehaviour
+public class BouncePad2D : MonoBehaviour
 {
     [Tooltip("Enter the tag name that should register collisions. Leave blank for any object to be affected.")]
     [SerializeField] private string tagName;
