@@ -17,7 +17,7 @@ public class PlayerProjectileAttack3D : MonoBehaviour
     [SerializeField] private Transform launchTransform;
 
     [Tooltip("The initial velocity of the projectile.")]
-    [SerializeField] private float velocity = 25f;
+    [SerializeField] private float velocity = 5f;
 
     [Tooltip("Whether the projectile attack requires ammunition to work.")]
     [SerializeField] private bool requireAmmo = false;
