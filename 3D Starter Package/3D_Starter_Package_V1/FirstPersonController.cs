@@ -51,7 +51,7 @@ public class FirstPersonController : PlayerMovementBase
     [SerializeField] private float fallMultiplier = 2.5f;
 
     [Tooltip("For when the player is rising but the jump key is not held.")]
-    [SerializeField] private float lowJumpMultiplier = 2.0f;
+    [SerializeField] private float lowJumpFallMultiplier = 2f;
 
     [Tooltip("Cap for the maximum falling speed.")]
     [SerializeField] private float maxFallSpeed = 20f;
@@ -250,7 +250,7 @@ public class FirstPersonController : PlayerMovementBase
         else if (rb.linearVelocity.y > 0 && !Input.GetButton("Jump"))
         {
             // Rising but jump button not held - apply low jump multiplier for quick arc
-            gravityMultiplier = lowJumpMultiplier;
+            gravityMultiplier = lowJumpFallMultiplier;
         }
         else
         {

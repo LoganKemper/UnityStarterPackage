@@ -137,16 +137,21 @@ public class EnemyHealth3D : MonoBehaviour
         // If the drop has been assigned, spawn it on death
         if (drop != null)
         {
+            GameObject newDrop;
+
             if (dropTransform == null)
             {
                 // dropTransform is null, spawn drop at the center of the enemy
-                Instantiate(drop, transform.position, Quaternion.identity);
+                newDrop = Instantiate(drop, transform.position, Quaternion.identity);
             }
             else
             {
                 // dropTransform has been assigned, spawn drop there
-                Instantiate(drop, dropTransform.position, Quaternion.identity);
+                newDrop = Instantiate(drop, dropTransform.position, Quaternion.identity);
             }
+
+            // Make sure the drop is active when spawned
+            newDrop.SetActive(true);
         }
 
         onEnemyDeath.Invoke();
