@@ -16,6 +16,9 @@ public class Teleporter3D : MonoBehaviour
     [Tooltip("Drag in the transform that the player will be teleported to.")]
     [SerializeField] private Transform destination;
 
+    [Tooltip("If true, the player will be rotated to match the rotation of the destination transform.")]
+    [SerializeField] private bool useDestinationRotation = false;
+
     [Tooltip("If true, the teleport key must be pressed once the player has entered the trigger. If false, they will be teleported as soon as they enter the trigger.")]
     [SerializeField] private bool requireKeyPress = true;
 
@@ -65,7 +68,17 @@ public class Teleporter3D : MonoBehaviour
             return;
         }
 
-        player.position = destination.position;
+        if (useDestinationRotation)
+        {
+            // Move and rotate the player to the destination transform
+            player.SetPositionAndRotation(destination.position, destination.rotation);
+        }
+        else
+        {
+            // Only move the player to the destination transform
+            player.position = destination.position;
+        }
+
         onTeleported.Invoke();
     }
 }

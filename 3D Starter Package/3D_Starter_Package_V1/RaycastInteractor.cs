@@ -5,12 +5,12 @@
 using UnityEngine;
 
 /// <summary>
-/// Add to a first-person controller to interact with nearby objects.
+/// Add to a player controller to interact with nearby objects. Intended for first-person controllers, but can work with other perspectives.
 /// </summary>
-public class FirstPersonInteractor : MonoBehaviour
+public class RaycastInteractor : MonoBehaviour
 {
-    [Tooltip("Drag in the first-person camera.")]
-    [SerializeField] private Camera playerCamera;
+    [Tooltip("Drag in the transform the interactor should come from. Likely the camera on a first-person controller.")]
+    [SerializeField] private Transform interactorSource;
 
     [Tooltip("The maximum allowed distance from the camera to the interactable GameObject.")]
     [SerializeField] private float interactDistance = 5f;
@@ -29,7 +29,7 @@ public class FirstPersonInteractor : MonoBehaviour
     private void Interact()
     {
         // Sends a ray out from the camera
-        Ray ray = new(playerCamera.transform.position, playerCamera.transform.forward);
+        Ray ray = new(interactorSource.position, interactorSource.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
         {

@@ -52,6 +52,13 @@ public class PlayerHealth3D : MonoBehaviour
         Segmented
     }
 
+    // Call this method to increase or decrease health
+    public void AdjustHealth(int adjustment)
+    {
+        SetHealth(currentHealth + adjustment);
+        UpdateHealth();
+    }
+
     private void Start()
     {
         if (healthType == HealthType.HealthBar)
@@ -60,10 +67,6 @@ public class PlayerHealth3D : MonoBehaviour
             {
                 // The image type needs to be set to Filled to dynamically adjust its fill proportion
                 healthBar.type = Image.Type.Filled;
-            }
-            else
-            {
-                Debug.LogWarning("The player's health bar has not been assigned");
             }
         }
         else if (healthType == HealthType.Segmented)
@@ -101,7 +104,7 @@ public class PlayerHealth3D : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("The player's health bar is null");
+                Debug.LogWarning("The player's health bar has not been assigned");
             }
         }
         else if (healthType == HealthType.Segmented)
