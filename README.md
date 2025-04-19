@@ -15,6 +15,6 @@ All scripts were written by Logan Kemper unless noted otherwise. Feel free to us
 
 - Create a new Unity 6 project using the Universal Render Pipeline (Package last tested with Unity 6000.0.36f1). 
 - Import TextMesh Pro. In the scene hierarchy, right-click > UI > Text - TextMesh Pro. If it's not in the project yet, a TMP Importer dialogue will pop up. Choose "Import TMP Essentials". 
-- Download the desired UnityPackage files from this repo. Import them to Unity by choosing Assets > Import Package > Custom Package... then select the .unitypackage file. Make sure everything is checked on and click "Import". 
+- Download the desired .unitypackage files from this repo. Import them to Unity by choosing Assets > Import Package > Custom Package... then select the .unitypackage file. Make sure everything is checked on and click "Import". 
 - Check out the example scene to see the scripts in action! 
 - Note that this starter package uses Unity's Input Manager for input. Under Edit > Project Settings... > Player > Other Settings, make sure Active Input Handling is set to "Both" or "Input Manager (Old)". 
