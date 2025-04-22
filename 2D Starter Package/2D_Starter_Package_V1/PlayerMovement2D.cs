@@ -197,7 +197,7 @@ public class PlayerMovement2D : MonoBehaviour
             wasRunning = isRunning;
         }
 
-        // If assigned, set the animator's "IsRunning" parameter true or false based on whether horizontal movement is being inputted
+        // If assigned, set the animator's "IsRunning" parameter true or false based on whether there is horizontal movement input
         if (animator != null)
         {
             animator.SetBool("IsRunning", isRunning);

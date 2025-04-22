@@ -5,7 +5,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Adds sound effects to PlayerMovement.
+/// Adds sound effects to PlayerMovement2D.
 /// </summary>
 [RequireComponent(typeof(PlayerMovement2D))]
 public class PlayerAudio2D : MonoBehaviour
@@ -38,6 +38,11 @@ public class PlayerAudio2D : MonoBehaviour
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement2D>();
+
+        if (playerMovement == null)
+        {
+            Debug.LogWarning("Make sure PlayerAudio2D is attached to a GameObject with PlayerMovement2D!");
+        }
 
         // Subscribe to player movement events
         playerMovement.OnJump += PlayJumpSound;

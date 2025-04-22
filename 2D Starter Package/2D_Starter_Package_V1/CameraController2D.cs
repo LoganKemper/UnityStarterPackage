@@ -13,7 +13,7 @@ public class CameraController2D : MonoBehaviour
     [SerializeField] private Transform target;
 
     [Tooltip("How quickly the camera keeps up with the target. A higher value will follow the target more closely.")]
-    [SerializeField] private float followSpeed = 10f;
+    [SerializeField] private float followSpeed = 7.5f;
 
     [Tooltip("Allows the player to peek with up/down input.")]
     [SerializeField] private bool allowPeeking = true;

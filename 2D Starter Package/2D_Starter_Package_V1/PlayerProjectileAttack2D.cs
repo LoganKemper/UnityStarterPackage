@@ -20,7 +20,7 @@ public class PlayerProjectileAttack2D : MonoBehaviour
     [SerializeField] private Transform playerTransform;
 
     [Tooltip("The initial velocity of the projectile.")]
-    [SerializeField] private float velocity = 5f;
+    [SerializeField] private float velocity = 20f;
 
     [Tooltip("Optional: Delay the spawning of the projectile. Leave at 0 to shoot immediately.")]
     [SerializeField] private float shootDelay = 0f;
@@ -133,11 +133,11 @@ public class PlayerProjectileAttack2D : MonoBehaviour
 
         if (playerTransform.localScale.x > 0) // Facing right
         {
-            newProjectile.Launch(velocity, true, gameObject);
+            newProjectile.Launch(velocity, true, playerTransform.gameObject);
         }
         else // Facing left
         {
-            newProjectile.Launch(-velocity, false, gameObject);
+            newProjectile.Launch(-velocity, false, playerTransform.gameObject);
         }
 
         if (shootSound != null)

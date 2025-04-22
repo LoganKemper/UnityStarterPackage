@@ -70,7 +70,7 @@ public class PatrolSimple2D : MonoBehaviour
     }
 
     // Draws a line in the scene view to visualize the patrol path
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         if (pointB == null)
         {

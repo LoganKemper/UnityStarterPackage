@@ -116,16 +116,15 @@ public class PlayerHealth2D : MonoBehaviour
             onPlayerDamaged.Invoke();
         }
 
-        currentHealth = newHealth;
-
-        if (allowOverhealing && currentHealth < 0)
+        if (allowOverhealing)
         {
-            currentHealth = 0;
+            // Allow overhealing, but don't allow negative values
+            currentHealth = Mathf.Max(0, newHealth);
         }
         else
         {
-            // Clamp the new health to not be below 0 or above maxHealth
-            Mathf.Clamp(currentHealth, 0, maxHealth);
+            // Clamp health between 0 and maxHealth
+            currentHealth = Mathf.Clamp(newHealth, 0, maxHealth);
         }
 
         if (currentHealth == 0)
