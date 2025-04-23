@@ -27,7 +27,7 @@ public class PlayerMeleeAttack2D : MonoBehaviour
     [SerializeField] private float cooldown = 0.25f;
 
     [Space(20)]
-    [SerializeField] private UnityEvent onMelee;
+    [SerializeField] private UnityEvent onMeleeStart, onMeleeEnd;
 
     private bool canMelee = true;
     private float cooldownTimer = 0;
@@ -82,10 +82,11 @@ public class PlayerMeleeAttack2D : MonoBehaviour
         // Begin the attack
         cooldownTimer = cooldown;
         hitbox.enabled = true;
-        onMelee.Invoke();
+        onMeleeStart.Invoke();
 
         // Wait for hitboxTime, then disable the hitbox
         yield return new WaitForSeconds(hitboxTime);
         hitbox.enabled = false;
+        onMeleeEnd.Invoke();
     }
 }

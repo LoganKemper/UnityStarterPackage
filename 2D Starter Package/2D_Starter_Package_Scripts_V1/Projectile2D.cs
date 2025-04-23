@@ -51,7 +51,7 @@ public class Projectile2D : MonoBehaviour
         m_Rigidbody2D.linearVelocityX = emitVelocity * relativeVelocity;
 
         // Flip the transform on the x-axis if it's not facing right
-        if (facingRight)
+        if (!facingRight)
         {
             transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
         }

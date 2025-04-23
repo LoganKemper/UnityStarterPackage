@@ -19,6 +19,9 @@ public class BouncePad2D : MonoBehaviour
     [Tooltip("Choose the direction of the bounce force.")]
     [SerializeField] private BounceDirection bounceDirection = BounceDirection.Up;
 
+    [Tooltip("Choose Add Force to apply the force in addition to the Rigidbody2D's current force. Choose Override Force to replace the current force with the new bounce force.")]
+    [SerializeField] private ForceMode forceMode = ForceMode.AddForce;
+
     [Space(20)]
     [SerializeField] private UnityEvent onBounce;
 
@@ -35,6 +38,12 @@ public class BouncePad2D : MonoBehaviour
         DownLeft
     }
 
+    public enum ForceMode
+    {
+        AddForce,
+        OverrideForce
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Check if the colliding object has the required tag (if specified)
@@ -46,8 +55,16 @@ public class BouncePad2D : MonoBehaviour
                 // Determine the bounce force direction
                 Vector2 forceDirection = GetDirectionVector(bounceDirection);
 
-                // Apply impulse (instant) force to the rigidbody
-                rb.AddForce(forceDirection * bounceForce, ForceMode2D.Impulse);
+                if (forceMode == ForceMode.AddForce)
+                {
+                    // Add force to the rigidbody
+                    rb.AddForce(forceDirection * bounceForce, ForceMode2D.Impulse);
+                }
+                else if (forceMode == ForceMode.OverrideForce)
+                {
+                    // Replace the velocity with a new one in the force direction
+                    rb.linearVelocity = forceDirection * bounceForce;
+                }
 
                 onBounce.Invoke();
             }
