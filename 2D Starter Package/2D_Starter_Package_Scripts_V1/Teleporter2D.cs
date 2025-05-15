@@ -5,67 +5,70 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Teleports the player to another location.
-/// </summary>
-public class Teleporter2D : MonoBehaviour
+namespace DigitalWorlds.StarterPackage2D
 {
-    [Tooltip("Enter the player's tag name. Could be used for other tags as well.")]
-    [SerializeField] private string tagName = "Player";
-
-    [Tooltip("Drag in the transform that the player will be teleported to.")]
-    [SerializeField] private Transform destination;
-
-    [Tooltip("If true, the teleport key must be pressed once the player has entered the trigger. If false, they will be teleported as soon as they enter the trigger.")]
-    [SerializeField] private bool requireKeyPress = true;
-
-    [Tooltip("The key input that the script is listening for.")]
-    [SerializeField] private KeyCode teleportKey = KeyCode.Space;
-
-    [Space(20)]
-    [SerializeField] private UnityEvent onTeleported;
-
-    private Transform player;
-
-    private void Update()
+    /// <summary>
+    /// Teleports the player to another location.
+    /// </summary>
+    public class Teleporter2D : MonoBehaviour
     {
-        if (Input.GetKeyDown(teleportKey) && requireKeyPress && player != null)
-        {
-            TeleportPlayer();
-        }
-    }
+        [Tooltip("Enter the player's tag name. Could be used for other tags as well.")]
+        [SerializeField] private string tagName = "Player";
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!string.IsNullOrEmpty(tagName) && collision.CompareTag(tagName))
-        {
-            player = collision.transform;
+        [Tooltip("Drag in the transform that the player will be teleported to.")]
+        [SerializeField] private Transform destination;
 
-            if (!requireKeyPress)
+        [Tooltip("If true, the teleport key must be pressed once the player has entered the trigger. If false, they will be teleported as soon as they enter the trigger.")]
+        [SerializeField] private bool requireKeyPress = true;
+
+        [Tooltip("The key input that the script is listening for.")]
+        [SerializeField] private KeyCode teleportKey = KeyCode.Space;
+
+        [Space(20)]
+        [SerializeField] private UnityEvent onTeleported;
+
+        private Transform player;
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(teleportKey) && requireKeyPress && player != null)
             {
                 TeleportPlayer();
             }
         }
-    }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (!string.IsNullOrEmpty(tagName) && collision.CompareTag(tagName))
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            player = null;
-        }
-    }
+            if (!string.IsNullOrEmpty(tagName) && collision.CompareTag(tagName))
+            {
+                player = collision.transform;
 
-    // Teleport the player to the specified destination
-    public void TeleportPlayer()
-    {
-        if (destination == null)
-        {
-            Debug.LogWarning("Teleporter destination is not assigned");
-            return;
+                if (!requireKeyPress)
+                {
+                    TeleportPlayer();
+                }
+            }
         }
 
-        player.position = destination.position;
-        onTeleported.Invoke();
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (!string.IsNullOrEmpty(tagName) && collision.CompareTag(tagName))
+            {
+                player = null;
+            }
+        }
+
+        // Teleport the player to the specified destination
+        public void TeleportPlayer()
+        {
+            if (destination == null)
+            {
+                Debug.LogWarning("Teleporter destination is not assigned");
+                return;
+            }
+
+            player.position = destination.position;
+            onTeleported.Invoke();
+        }
     }
 }

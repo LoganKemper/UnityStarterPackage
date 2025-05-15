@@ -4,36 +4,39 @@
 
 using UnityEngine;
 
-/// <summary>
-/// Add to a light to flicker its intensity up and down.
-/// </summary>
-public class FlickeringLight : MonoBehaviour
+namespace DigitalWorlds
 {
-    [SerializeField] private Light m_light;
-    [SerializeField] private float minIntensity = 0.1f;
-    [SerializeField] private float maxIntensity = 1f;
-    [SerializeField] private float frequency = 1f;
-
-    private float randomSeed;
-
-    private void Start()
+    /// <summary>
+    /// Add to a light to flicker its intensity up and down.
+    /// </summary>
+    public class FlickeringLight : MonoBehaviour
     {
-        // Generate a random number for use in the Perlin noise generator
-        randomSeed = Random.Range(0f, 65535f);
-    }
+        [SerializeField] private Light m_light;
+        [SerializeField] private float minIntensity = 0.1f;
+        [SerializeField] private float maxIntensity = 1f;
+        [SerializeField] private float frequency = 1f;
 
-    private void Update()
-    {
-        // Return early if the light has not been assigned
-        if (m_light == null)
+        private float randomSeed;
+
+        private void Start()
         {
-            return;
+            // Generate a random number for use in the Perlin noise generator
+            randomSeed = Random.Range(0f, 65535f);
         }
 
-        // Perlin noise can be used to efficiently generate pseudo-random patterns of numbers
-        float noise = Mathf.PerlinNoise(randomSeed, Time.time * frequency);
+        private void Update()
+        {
+            // Return early if the light has not been assigned
+            if (m_light == null)
+            {
+                return;
+            }
 
-        // Flicker the intensity using the noise value
-        m_light.intensity = Mathf.Lerp(minIntensity, maxIntensity, noise);
+            // Perlin noise can be used to efficiently generate pseudo-random patterns of numbers
+            float noise = Mathf.PerlinNoise(randomSeed, Time.time * frequency);
+
+            // Flicker the intensity using the noise value
+            m_light.intensity = Mathf.Lerp(minIntensity, maxIntensity, noise);
+        }
     }
 }

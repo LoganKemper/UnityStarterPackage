@@ -5,15 +5,18 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Generic script for adding a UnityEvent to the Start method.
-/// </summary>
-public class StartEvent : MonoBehaviour
+namespace DigitalWorlds
 {
-    [SerializeField] private UnityEvent onStartEvent;
-
-    private void Start()
+    /// <summary>
+    /// Generic script for adding a UnityEvent to the Start method.
+    /// </summary>
+    public class StartEvent : MonoBehaviour
     {
-        onStartEvent.Invoke();
+        [SerializeField] private UnityEvent onStartEvent;
+
+        private void Start()
+        {
+            onStartEvent.Invoke();
+        }
     }
 }

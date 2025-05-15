@@ -5,63 +5,66 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Changes a SpriteRenderer to a new color, then back to the original color.
-/// </summary>
-public class FlashColor2D : MonoBehaviour
+namespace DigitalWorlds.StarterPackage2D
 {
-    [Tooltip("Drag in the SpriteRenderer component.")]
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
-    [Tooltip("Color that the sprite will flash to.")]
-    [SerializeField] private Color flashColor = Color.red;
-
-    [Tooltip("Length of the flash in seconds.")]
-    [SerializeField] private float flashDuration = 0.1f;
-
-    private Color originalColor;
-    private Coroutine flashCoroutine;
-
-    private void Start()
+    /// <summary>
+    /// Changes a SpriteRenderer to a new color, then back to the original color.
+    /// </summary>
+    public class FlashColor2D : MonoBehaviour
     {
-        // Cache the original color
-        originalColor = spriteRenderer.color;
-    }
+        [Tooltip("Drag in the SpriteRenderer component.")]
+        [SerializeField] private SpriteRenderer spriteRenderer;
 
-    public void Flash()
-    {
-        if (flashCoroutine != null)
+        [Tooltip("Color that the sprite will flash to.")]
+        [SerializeField] private Color flashColor = Color.red;
+
+        [Tooltip("Length of the flash in seconds.")]
+        [SerializeField] private float flashDuration = 0.1f;
+
+        private Color originalColor;
+        private Coroutine flashCoroutine;
+
+        private void Start()
         {
-            StopCoroutine(flashCoroutine);
+            // Cache the original color
+            originalColor = spriteRenderer.color;
         }
 
-        flashCoroutine = StartCoroutine(FlashCoroutine());
-    }
-
-    // Flash to a color, then change back to the original color
-    private IEnumerator FlashCoroutine()
-    {
-        spriteRenderer.color = flashColor;
-        yield return new WaitForSeconds(flashDuration);
-        spriteRenderer.color = originalColor;
-    }
-
-    // Reset if this GameObject is disabled
-    private void OnDisable()
-    {
-        if (flashCoroutine != null)
+        public void Flash()
         {
-            StopCoroutine(flashCoroutine);
+            if (flashCoroutine != null)
+            {
+                StopCoroutine(flashCoroutine);
+            }
+
+            flashCoroutine = StartCoroutine(FlashCoroutine());
+        }
+
+        // Flash to a color, then change back to the original color
+        private IEnumerator FlashCoroutine()
+        {
+            spriteRenderer.color = flashColor;
+            yield return new WaitForSeconds(flashDuration);
             spriteRenderer.color = originalColor;
         }
-    }
 
-    private void OnValidate()
-    {
-        // Prevent flashDuration from being set to negative
-        if (flashDuration < 0)
+        // Reset if this GameObject is disabled
+        private void OnDisable()
         {
-            flashDuration = 0;
+            if (flashCoroutine != null)
+            {
+                StopCoroutine(flashCoroutine);
+                spriteRenderer.color = originalColor;
+            }
+        }
+
+        private void OnValidate()
+        {
+            // Prevent flashDuration from being set to negative
+            if (flashDuration < 0)
+            {
+                flashDuration = 0;
+            }
         }
     }
 }

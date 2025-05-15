@@ -5,39 +5,42 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// Change the current scene by index or by name.
-/// </summary>
-public class ChangeScene : MonoBehaviour
+namespace DigitalWorlds
 {
-    // Call one of these methods via a UnityEvent to change the current scene
-
-    public void LoadSceneByName(string name)
+    /// <summary>
+    /// Change the current scene by index or by name.
+    /// </summary>
+    public class ChangeScene : MonoBehaviour
     {
-        SceneManager.LoadScene(name);
-    }
+        // Call one of these methods via a UnityEvent to change the current scene
 
-    public void LoadSceneByIndex(int index)
-    {
-        SceneManager.LoadScene(index);
-    }
-
-    public void LoadNextScene()
-    {
-        int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
-
-        if (nextIndex < SceneManager.sceneCountInBuildSettings)
+        public void LoadSceneByName(string name)
         {
-            SceneManager.LoadScene(nextIndex);
+            SceneManager.LoadScene(name);
         }
-        else
-        {
-            Debug.LogWarning("No more scenes to load. Already at the last scene.");
-        }
-    }
 
-    public void LoadCurrentScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        public void LoadSceneByIndex(int index)
+        {
+            SceneManager.LoadScene(index);
+        }
+
+        public void LoadNextScene()
+        {
+            int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
+
+            if (nextIndex < SceneManager.sceneCountInBuildSettings)
+            {
+                SceneManager.LoadScene(nextIndex);
+            }
+            else
+            {
+                Debug.LogWarning("No more scenes to load. Already at the last scene.");
+            }
+        }
+
+        public void LoadCurrentScene()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }
