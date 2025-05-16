@@ -4,16 +4,19 @@
 
 using UnityEngine;
 
-/// <summary>
-/// Attach to a GameObject to make it always face the main camera in the scene.
-/// </summary>
-public class FaceCamera : MonoBehaviour
+namespace DigitalWorlds.StarterPackage3D
 {
-    private void Update()
+    /// <summary>
+    /// Attach to a GameObject to make it always face the main camera in the scene.
+    /// </summary>
+    public class FaceCamera : MonoBehaviour
     {
-        if (Camera.main != null)
+        private void Update()
         {
-            transform.LookAt(Camera.main.transform);
+            if (Camera.main != null)
+            {
+                transform.LookAt(Camera.main.transform);
+            }
         }
     }
 }

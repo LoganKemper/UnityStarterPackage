@@ -4,32 +4,35 @@
 
 using UnityEngine;
 
-/// <summary>
-/// SelfDestruct can be used to destroy components and GameObjects via UnityEvents.
-/// </summary>
-public class SelfDestruct : MonoBehaviour
+namespace DigitalWorlds.StarterPackage3D
 {
-    // Destroys the GameObject that this SelfDestruct component is attached to
-    public void DestroyThisGameObject()
+    /// <summary>
+    /// SelfDestruct can be used to destroy components and GameObjects via UnityEvents.
+    /// </summary>
+    public class SelfDestruct : MonoBehaviour
     {
-        Destroy(gameObject);
-    }
+        // Destroys the GameObject that this SelfDestruct component is attached to
+        public void DestroyThisGameObject()
+        {
+            Destroy(gameObject);
+        }
 
-    // Destroys the target GameObject
-    public void DestroyTargetGameObject(GameObject target)
-    {
-        Destroy(target);
-    }
+        // Destroys the target GameObject
+        public void DestroyTargetGameObject(GameObject target)
+        {
+            Destroy(target);
+        }
 
-    // Destroys the GameObject that this SelfDestruct component is attached to after a given number of seconds 
-    public void DestroyAfterSeconds(float seconds)
-    {
-        Destroy(gameObject, seconds);
-    }
+        // Destroys the GameObject that this SelfDestruct component is attached to after a given number of seconds 
+        public void DestroyAfterSeconds(float seconds)
+        {
+            Destroy(gameObject, seconds);
+        }
 
-    // Destroys the target component
-    public void DestroyTargetComponent(Component target)
-    {
-        Destroy(target);
+        // Destroys the target component
+        public void DestroyTargetComponent(Component target)
+        {
+            Destroy(target);
+        }
     }
 }

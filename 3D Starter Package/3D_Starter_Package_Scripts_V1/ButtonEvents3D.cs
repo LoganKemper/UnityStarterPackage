@@ -5,56 +5,59 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Generic script for adding UnityEvents to button presses.
-/// </summary>
-public class ButtonEvents3D : MonoBehaviour
+namespace DigitalWorlds.StarterPackage3D
 {
-    [Tooltip("Enter the tag name that should register triggers. Leave blank for any tag to be used.")]
-    [SerializeField] private string tagName;
-
-    [Tooltip("If false, the button can be activated at any time.")]
-    [SerializeField] private bool requiresTrigger = true;
-
-    [Tooltip("The key input that the script is listening for. Choose \"None\" to disable key input.")]
-    [SerializeField] private KeyCode keyToPress = KeyCode.E;
-
-    [Space(20)]
-    [SerializeField] private UnityEvent onButtonActivated, onButtonReleased;
-
-    private bool entered;
-
-    private void Update()
+    /// <summary>
+    /// Generic script for adding UnityEvents to button presses.
+    /// </summary>
+    public class ButtonEvents3D : MonoBehaviour
     {
-        // Prevents unnecessary checks if no key has been assigned
-        if (keyToPress == KeyCode.None)
+        [Tooltip("Enter the tag name that should register triggers. Leave blank for any tag to be used.")]
+        [SerializeField] private string tagName;
+
+        [Tooltip("If false, the button can be activated at any time.")]
+        [SerializeField] private bool requiresTrigger = true;
+
+        [Tooltip("The key input that the script is listening for. Choose \"None\" to disable key input.")]
+        [SerializeField] private KeyCode keyToPress = KeyCode.E;
+
+        [Space(20)]
+        [SerializeField] private UnityEvent onButtonActivated, onButtonReleased;
+
+        private bool entered;
+
+        private void Update()
         {
-            return;
+            // Prevents unnecessary checks if no key has been assigned
+            if (keyToPress == KeyCode.None)
+            {
+                return;
+            }
+
+            if (Input.GetKeyDown(keyToPress) && (entered || !requiresTrigger))
+            {
+                onButtonActivated.Invoke();
+            }
+            else if (Input.GetKeyUp(keyToPress) && (entered || !requiresTrigger))
+            {
+                onButtonReleased.Invoke();
+            }
         }
 
-        if (Input.GetKeyDown(keyToPress) && (entered || !requiresTrigger))
+        private void OnTriggerEnter(Collider other)
         {
-            onButtonActivated.Invoke();
+            if (string.IsNullOrEmpty(tagName) || other.CompareTag(tagName))
+            {
+                entered = true;
+            }
         }
-        else if (Input.GetKeyUp(keyToPress) && (entered || !requiresTrigger))
-        {
-            onButtonReleased.Invoke();
-        }
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (string.IsNullOrEmpty(tagName) || other.CompareTag(tagName))
+        private void OnTriggerExit(Collider other)
         {
-            entered = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (string.IsNullOrEmpty(tagName) || other.CompareTag(tagName))
-        {
-            entered = false;
+            if (string.IsNullOrEmpty(tagName) || other.CompareTag(tagName))
+            {
+                entered = false;
+            }
         }
     }
 }

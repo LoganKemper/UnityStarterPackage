@@ -4,23 +4,26 @@
 
 using UnityEngine;
 
-/// <summary>
-/// Generic script for spawning in GameObjects.
-/// </summary>
-public class Spawner : MonoBehaviour
+namespace DigitalWorlds.StarterPackage3D
 {
-    [Tooltip("Drag in a GameObject to be copied by the spawner. It could be a prefab from the project assets or a GameObject in the hierarchy.")]
-    [SerializeField] private GameObject objectToSpawn;
-
-    public void SpawnObject()
+    /// <summary>
+    /// Generic script for spawning in GameObjects.
+    /// </summary>
+    public class Spawner : MonoBehaviour
     {
-        if (objectToSpawn == null)
+        [Tooltip("Drag in a GameObject to be copied by the spawner. It could be a prefab from the project assets or a GameObject in the hierarchy.")]
+        [SerializeField] private GameObject objectToSpawn;
+
+        public void SpawnObject()
         {
-            Debug.LogWarning("Spawner does not have an object to spawn");
-        }
-        else
-        {
-            Instantiate(objectToSpawn, transform.position, Quaternion.identity);
+            if (objectToSpawn == null)
+            {
+                Debug.LogWarning("Spawner does not have an object to spawn");
+            }
+            else
+            {
+                Instantiate(objectToSpawn, transform.position, Quaternion.identity);
+            }
         }
     }
 }

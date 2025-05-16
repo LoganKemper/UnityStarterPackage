@@ -5,40 +5,43 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Generic script for adding UnityEvents to 2D trigger collisions.
-/// </summary>
-public class TriggerEvents3D : MonoBehaviour
+namespace DigitalWorlds.StarterPackage3D
 {
-    [Tooltip("Enter the tag name that should register triggers. Leave blank for any tag to be used.")]
-    [SerializeField] private string tagName = "Player";
-
-    [Space(20)]
-    [SerializeField] private UnityEvent onTrigger, onTriggerExit;
-
-    private void OnTriggerEnter(Collider other)
+    /// <summary>
+    /// Generic script for adding UnityEvents to 2D trigger collisions.
+    /// </summary>
+    public class TriggerEvents3D : MonoBehaviour
     {
-        // Invokes onTriggerEvent if there's a trigger enter on this GameObject and...
-        // A) the tag field is empty
-        // OR
-        // B) the triggering GameObject's tag matches tagName
+        [Tooltip("Enter the tag name that should register triggers. Leave blank for any tag to be used.")]
+        [SerializeField] private string tagName = "Player";
 
-        if (string.IsNullOrEmpty(tagName) || other.CompareTag(tagName))
+        [Space(20)]
+        [SerializeField] private UnityEvent onTrigger, onTriggerExit;
+
+        private void OnTriggerEnter(Collider other)
         {
-            onTrigger.Invoke();
+            // Invokes onTriggerEvent if there's a trigger enter on this GameObject and...
+            // A) the tag field is empty
+            // OR
+            // B) the triggering GameObject's tag matches tagName
+
+            if (string.IsNullOrEmpty(tagName) || other.CompareTag(tagName))
+            {
+                onTrigger.Invoke();
+            }
         }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        // Invokes onExitEvent if there's a trigger exit on this GameObject and...
-        // A) the tag field is empty
-        // OR
-        // B) the triggering GameObject's tag matches tagName
-
-        if (string.IsNullOrEmpty(tagName) || other.CompareTag(tagName))
+        private void OnTriggerExit(Collider other)
         {
-            onTriggerExit.Invoke();
+            // Invokes onExitEvent if there's a trigger exit on this GameObject and...
+            // A) the tag field is empty
+            // OR
+            // B) the triggering GameObject's tag matches tagName
+
+            if (string.IsNullOrEmpty(tagName) || other.CompareTag(tagName))
+            {
+                onTriggerExit.Invoke();
+            }
         }
     }
 }

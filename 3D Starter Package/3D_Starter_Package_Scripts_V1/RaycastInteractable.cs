@@ -5,15 +5,18 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Used in conjunction with RaycastInteractor to add a UnityEvent to interactions.
-/// </summary>
-public class RaycastInteractable : MonoBehaviour
+namespace DigitalWorlds.StarterPackage3D
 {
-    [SerializeField] private UnityEvent onInteraction;
-
-    public void Interaction()
+    /// <summary>
+    /// Used in conjunction with RaycastInteractor to add a UnityEvent to interactions.
+    /// </summary>
+    public class RaycastInteractable : MonoBehaviour
     {
-        onInteraction.Invoke();
+        [SerializeField] private UnityEvent onInteraction;
+
+        public void Interaction()
+        {
+            onInteraction.Invoke();
+        }
     }
 }
