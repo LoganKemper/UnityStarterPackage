@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DigitalWorlds
+namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
     /// Generic script for adding a UnityEvent to the Start method.

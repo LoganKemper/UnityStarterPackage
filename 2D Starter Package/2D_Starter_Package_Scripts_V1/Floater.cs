@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace DigitalWorlds
+namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
     /// Add to a GameObject to make it float up and down and spin.

@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace DigitalWorlds
+namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
     /// Provides functionality for closing the game.

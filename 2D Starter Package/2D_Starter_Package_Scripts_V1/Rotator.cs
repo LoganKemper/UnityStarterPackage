@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace DigitalWorlds
+namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
     /// Rotates the GameObject by a specified amount on each axis.

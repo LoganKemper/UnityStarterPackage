@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace DigitalWorlds
+namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
     /// Change the current scene by index or by name.

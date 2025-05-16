@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 
-namespace DigitalWorlds
+namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
     /// Generic script for counting down time. Can be used to display a timer on the UI, or just to delay an action by a specified amount of time.

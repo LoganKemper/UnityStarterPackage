@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace DigitalWorlds
+namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
     /// Generic script for spawning in GameObjects.

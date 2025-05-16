@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 using TMPro;
 
-namespace DigitalWorlds
+namespace DigitalWorlds.StarterPackage2D
 {
 
     /// <summary>

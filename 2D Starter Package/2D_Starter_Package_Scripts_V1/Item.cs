@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace DigitalWorlds
+namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
     /// Add to a GameObject with a trigger collider to allow the player to add the item to their inventory.
