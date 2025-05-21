@@ -58,8 +58,11 @@ namespace DigitalWorlds.StarterPackage2D
         {
             if (healthType == HealthType.HealthBar)
             {
-                // The image type needs to be set to Filled to dynamically adjust its fill proportion
-                healthBar.type = Image.Type.Filled;
+                if (healthBar != null)
+                {
+                    // The image type needs to be set to Filled to dynamically adjust its fill proportion
+                    healthBar.type = Image.Type.Filled;
+                }
             }
             else if (healthType == HealthType.Segmented)
             {
@@ -74,7 +77,16 @@ namespace DigitalWorlds.StarterPackage2D
             // Try to find a respawn point if it hasn't been assigned
             if (respawnPoint == null)
             {
-                respawnPoint = GameObject.FindWithTag("Respawn").transform;
+                GameObject respawn = GameObject.FindWithTag("Respawn");
+
+                if (respawnPoint == null)
+                {
+                    Debug.LogWarning("Player repawn point not found");
+                }
+                else
+                {
+                    respawnPoint = respawn.transform;
+                }
             }
         }
 
@@ -90,14 +102,20 @@ namespace DigitalWorlds.StarterPackage2D
                     fill = 1f;
                 }
 
-                healthBar.fillAmount = fill;
+                if (healthBar != null)
+                {
+                    healthBar.fillAmount = fill;
+                }
             }
             else if (healthType == HealthType.Segmented)
             {
                 for (int i = 0; i < healthSegments.Length; i++)
                 {
-                    // Enables segments corresponding to the current health and disables extra segments if the health decreases
-                    healthSegments[i].enabled = (i < currentHealth);
+                    if (healthSegments[i] != null)
+                    {
+                        // Enables segments corresponding to the current health and disables extra segments if the health decreases
+                        healthSegments[i].enabled = (i < currentHealth);
+                    }
                 }
             }
         }

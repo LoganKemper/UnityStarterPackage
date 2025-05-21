@@ -9,6 +9,7 @@ namespace DigitalWorlds.StarterPackage2D
     /// <summary>
     /// A basic player controller with simple running and jumping behavior.
     /// </summary>
+    [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMovement2D : MonoBehaviour
     {
         [Tooltip("Drag in the player's animator to play animations for running and jumping.")]
