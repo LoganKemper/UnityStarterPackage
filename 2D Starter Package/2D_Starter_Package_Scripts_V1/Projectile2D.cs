@@ -26,6 +26,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("If true, the projectile won't destroy itself if it collides with the GameObject it came from.")]
         [SerializeField] private bool dontCollideWithOrigin = true;
 
+        [Tooltip("If true, the projectile will point towards the direction it's moving in (assuming the sprite is facing right).")]
+        [SerializeField] private bool rotateToTarget = false;
+
         private GameObject launcherOrigin;
 
         private void Start()
@@ -71,10 +74,21 @@ namespace DigitalWorlds.StarterPackage2D
 
             m_Rigidbody2D.linearVelocity = direction * emitVelocity;
 
-            // Flip the transform on the x-axis if the direction in pointing left
-            if (direction.x < 0)
+            if (rotateToTarget)
             {
-                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                // Calculate the rotation angle in degrees
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                // Apply rotation (assuming projectile's default forward direction is to the right)
+                transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            }
+            else
+            {
+                // Flip the transform on the x-axis if the direction in pointing left
+                if (direction.x < 0)
+                {
+                    transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                }
             }
         }
 

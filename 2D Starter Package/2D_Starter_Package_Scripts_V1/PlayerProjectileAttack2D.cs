@@ -33,6 +33,15 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("The current quantitiy of ammunition.")]
         [SerializeField] private int ammo = 0;
 
+        public enum LaunchDirection
+        {
+            FacingDirection,
+            MousePosition
+        }
+
+        [Tooltip("If set to Omnidirectional, the projectile will shoot towards the mouse cursor. Otherwise the projectile will shoot in the direction the player is facing.")]
+        [SerializeField] private LaunchDirection launchDirection = LaunchDirection.FacingDirection;
+
         [Tooltip("Optional: Sound effect for when the projectile is spawned.")]
         [SerializeField] private AudioClip shootSound;
 
@@ -133,13 +142,29 @@ namespace DigitalWorlds.StarterPackage2D
             // Create a new projectile
             Projectile2D newProjectile = Instantiate(projectile, launchTransform.position, Quaternion.identity);
 
-            if (playerTransform.localScale.x > 0) // Facing right
+            if (launchDirection == LaunchDirection.FacingDirection)
             {
-                newProjectile.Launch(velocity, true, playerTransform.gameObject);
+                if (playerTransform.localScale.x > 0) // Facing right
+                {
+                    newProjectile.Launch(velocity, true, playerTransform.gameObject);
+                }
+                else // Facing left
+                {
+                    newProjectile.Launch(-velocity, false, playerTransform.gameObject);
+                }
             }
-            else // Facing left
+            else if (launchDirection == LaunchDirection.MousePosition)
             {
-                newProjectile.Launch(-velocity, false, playerTransform.gameObject);
+                // Get the world position of the mouse cursor
+                Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                // Calculate the vector from the launch transform to the mouse position
+                Vector2 launchDirection = mousePosition - (Vector2)launchTransform.position;
+
+                // Normalize the vector
+                launchDirection = launchDirection.normalized;
+
+                newProjectile.Launch(launchDirection, velocity, playerTransform.gameObject);
             }
 
             if (shootSound != null)
@@ -148,6 +173,14 @@ namespace DigitalWorlds.StarterPackage2D
             }
 
             onProjectileLaunched.Invoke();
+        }
+
+        private void OnValidate()
+        {
+            // Enforce minimum values in the inspector
+            velocity = Mathf.Max(0f, velocity);
+            shootDelay = Mathf.Max(0f, shootDelay);
+            ammo = Mathf.Max(0, ammo);
         }
     }
 }

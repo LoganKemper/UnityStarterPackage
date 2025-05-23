@@ -7,9 +7,9 @@ using UnityEngine;
 namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
-    /// Adds sound effects to PlayerMovement2D.
+    /// Adds sound effects to player movement components.
     /// </summary>
-    [RequireComponent(typeof(PlayerMovement2D))]
+    [RequireComponent(typeof(PlayerMovementBase))]
     public class PlayerAudio2D : MonoBehaviour
     {
         [Header("Audio Sources")]
@@ -35,11 +35,11 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Optional: Sound effect for the player dashing.")]
         [SerializeField] private AudioClip dashSound;
 
-        private PlayerMovement2D playerMovement;
+        private PlayerMovementBase playerMovement;
 
         private void Awake()
         {
-            playerMovement = GetComponent<PlayerMovement2D>();
+            playerMovement = GetComponent<PlayerMovementBase>();
 
             if (playerMovement == null)
             {

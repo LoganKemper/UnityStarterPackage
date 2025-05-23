@@ -79,9 +79,9 @@ namespace DigitalWorlds.StarterPackage2D
             {
                 GameObject respawn = GameObject.FindWithTag("Respawn");
 
-                if (respawnPoint == null)
+                if (respawn == null)
                 {
-                    Debug.LogWarning("Player repawn point not found");
+                    Debug.LogWarning("Player respawn point not found");
                 }
                 else
                 {

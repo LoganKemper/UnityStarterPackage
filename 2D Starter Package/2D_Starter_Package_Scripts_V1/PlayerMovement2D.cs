@@ -7,10 +7,10 @@ using UnityEngine;
 namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
-    /// A basic player controller with simple running and jumping behavior.
+    /// A basic platformer player controller with simple running and jumping behavior.
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
-    public class PlayerMovement2D : MonoBehaviour
+    public class PlayerMovement2D : PlayerMovementBase
     {
         [Tooltip("Drag in the player's animator to play animations for running and jumping.")]
         [SerializeField] protected Animator animator;
@@ -41,14 +41,6 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("For how long after leaving the ground the player will still be able to jump.")]
         [SerializeField] protected float coyoteTime = 0.125f;
 
-        // Events for different player actions
-        // These are C# events (not UnityEvents) and must be accessed via code
-        public event System.Action OnJump;
-        public event System.Action OnMidAirJump;
-        public event System.Action OnLand;
-        public event System.Action<bool> OnRunningStateChanged;
-        public event System.Action OnDash; // Used by PlayerMovementAdvanced
-
         protected Rigidbody2D rb;
         protected float coyoteTimeCounter;
         protected float jumpBufferCounter;
@@ -76,6 +68,12 @@ namespace DigitalWorlds.StarterPackage2D
             rb.angularVelocity = 0f;
         }
 
+        public virtual void EnableAndResetMovement(bool isEnabled)
+        {
+            canMove = isEnabled;
+            ResetMovement();
+        }
+
         public virtual void AdjustJumps(int adjustment)
         {
             jumps += adjustment;
@@ -84,31 +82,6 @@ namespace DigitalWorlds.StarterPackage2D
         public virtual void SetJumps(int newJumps)
         {
             jumps = newJumps;
-        }
-
-        protected virtual void OnJumpEvent()
-        {
-            OnJump?.Invoke();
-        }
-
-        protected virtual void OnMidAirJumpEvent()
-        {
-            OnMidAirJump?.Invoke();
-        }
-
-        protected virtual void OnLandEvent()
-        {
-            OnLand?.Invoke();
-        }
-
-        protected virtual void OnRunningStateChangedEvent(bool isRunning)
-        {
-            OnRunningStateChanged?.Invoke(isRunning);
-        }
-
-        protected virtual void OnDashEvent()
-        {
-            OnDash?.Invoke();
         }
 
         protected virtual void Start()
@@ -154,7 +127,7 @@ namespace DigitalWorlds.StarterPackage2D
                 // Check if the player landed this FixedUpdate frame
                 if (!wasGrounded && coyoteTimeCounter < -landingThreshold)
                 {
-                    OnLand?.Invoke();
+                    OnLandEvent();
                 }
 
                 // If the player is on the ground, restore their jumps and coyote time
@@ -201,7 +174,7 @@ namespace DigitalWorlds.StarterPackage2D
             bool isRunning = moveInput != 0 && isGrounded;
             if (isRunning != wasRunning)
             {
-                OnRunningStateChanged?.Invoke(isRunning);
+                OnRunningStateChangedEvent(isRunning);
                 wasRunning = isRunning;
             }
 
@@ -233,11 +206,11 @@ namespace DigitalWorlds.StarterPackage2D
                 // Check if this was a jump off of the ground, or a mid-air jump
                 if (isGrounded || coyoteTimeCounter > 0f)
                 {
-                    OnJump?.Invoke();
+                    OnJumpEvent();
                 }
                 else
                 {
-                    OnMidAirJump?.Invoke();
+                    OnMidAirJumpEvent();
                 }
             }
         }
