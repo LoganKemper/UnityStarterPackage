@@ -18,8 +18,8 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("The position that the projectile should spawn from. It's usually a good idea to place it a little in front of the player.")]
         [SerializeField] private Transform launchTransform;
 
-        [Tooltip("The player's transform. Used to tell which way the player is facing.")]
-        [SerializeField] private Transform playerTransform;
+        [Tooltip("Optional: Assign the player GameObject to prevent projectiles from destroying when touching the player.")]
+        [SerializeField] private GameObject player;
 
         [Tooltip("The initial velocity of the projectile.")]
         [SerializeField] private float velocity = 20f;
@@ -39,7 +39,7 @@ namespace DigitalWorlds.StarterPackage2D
             MousePosition
         }
 
-        [Tooltip("If set to Omnidirectional, the projectile will shoot towards the mouse cursor. Otherwise the projectile will shoot in the direction the player is facing.")]
+        [Tooltip("If set to MousePosition, the projectile will shoot towards the mouse cursor. Otherwise the projectile will shoot in the direction the player is facing.")]
         [SerializeField] private LaunchDirection launchDirection = LaunchDirection.FacingDirection;
 
         [Tooltip("Optional: Sound effect for when the projectile is spawned.")]
@@ -144,14 +144,7 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (launchDirection == LaunchDirection.FacingDirection)
             {
-                if (playerTransform.localScale.x > 0) // Facing right
-                {
-                    newProjectile.Launch(velocity, true, playerTransform.gameObject);
-                }
-                else // Facing left
-                {
-                    newProjectile.Launch(-velocity, false, playerTransform.gameObject);
-                }
+                newProjectile.Launch(launchTransform.right, velocity, player);
             }
             else if (launchDirection == LaunchDirection.MousePosition)
             {
@@ -164,7 +157,7 @@ namespace DigitalWorlds.StarterPackage2D
                 // Normalize the vector
                 launchDirection = launchDirection.normalized;
 
-                newProjectile.Launch(launchDirection, velocity, playerTransform.gameObject);
+                newProjectile.Launch(launchDirection, velocity, player);
             }
 
             if (shootSound != null)

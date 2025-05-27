@@ -41,6 +41,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("For how long after leaving the ground the player will still be able to jump.")]
         [SerializeField] protected float coyoteTime = 0.125f;
 
+        [Tooltip("Optional: Drag in a transform that will point in the direction the player is facing.")]
+        [SerializeField] private Transform facingTransform;
+
         protected Rigidbody2D rb;
         protected float coyoteTimeCounter;
         protected float jumpBufferCounter;
@@ -228,6 +231,11 @@ namespace DigitalWorlds.StarterPackage2D
             // Flip the player's transform on the x-axis
             transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
             isFacingRight = !isFacingRight;
+
+            if (facingTransform != null)
+            {
+                facingTransform.rotation *= Quaternion.Euler(0f, 180f, 0f);
+            }
         }
     }
 }
