@@ -4,7 +4,7 @@ This repository contains a collection of scripts and assets for game development
 It has been created for game development classes at the University of Florida's Digital Worlds Institute. 
 
 Included is...
-- A collection of scripts for a 2D platformer/sidescroller game. 
+- A collection of scripts for a 2D side-scrolling or top-down game. 
 - A collection of scripts for a 3D first-person or third-person game. 
 - A dialogue system for use in 2D or 3D. 
 - Documention PDFs for each script collection. 
@@ -13,7 +13,7 @@ All scripts were written by Logan Kemper unless noted otherwise. Feel free to us
 
 ## How to Use
 
-- Create a new Unity 6 project using the Universal Render Pipeline (Package last tested with Unity 6000.0.36f1). 
+- Create a new 2D or 3D Unity 6 project using the Universal Render Pipeline (Package last tested with Unity 6000.0.36f1). 
 - Import TextMesh Pro. In the scene hierarchy, right-click > UI > Text - TextMesh Pro. If it's not in the project yet, a TMP Importer dialogue will pop up. Choose "Import TMP Essentials". 
 - Download the desired .unitypackage files from this repo. Import them to Unity by choosing Assets > Import Package > Custom Package... then select the .unitypackage file. Make sure everything is checked on and click "Import". 
 - Check out the example scene to see the scripts in action! 
