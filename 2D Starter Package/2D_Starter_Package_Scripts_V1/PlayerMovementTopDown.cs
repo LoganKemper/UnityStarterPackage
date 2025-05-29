@@ -106,28 +106,36 @@ namespace DigitalWorlds.StarterPackage2D
                     break;
             }
 
-            // Normalize the vector to prevent faster diagonal movement
-            if (movementInput.magnitude > 1f)
-            {
-                movementInput = movementInput.normalized;
-            }
-
             UpdateFacingDirection();
         }
 
         private void FixedUpdate()
         {
+            // Normalize the vector to prevent faster diagonal movement
+            Vector2 normalizedInput = movementInput;
+            if (movementInput.magnitude > 1f)
+            {
+                normalizedInput = movementInput.normalized;
+            }
+
             // Move the player's rigidbody
-            rb.linearVelocity = movementInput * movementSpeed;
+            rb.linearVelocity = normalizedInput * movementSpeed;
 
             bool isRunning = movementInput != Vector2.zero;
             OnRunningStateChangedEvent(isRunning);
 
+            // Update the animation parameters
             if (animator != null)
             {
                 animator.SetBool("IsRunning", isRunning);
                 animator.SetFloat("InputX", movementInput.x);
                 animator.SetFloat("InputY", movementInput.y);
+
+                if (isRunning)
+                {
+                    animator.SetFloat("LastInputX", movementInput.x);
+                    animator.SetFloat("LastInputY", movementInput.y);
+                }
             }
         }
 
