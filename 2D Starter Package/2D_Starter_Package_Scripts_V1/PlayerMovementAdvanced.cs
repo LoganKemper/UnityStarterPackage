@@ -133,7 +133,7 @@ namespace DigitalWorlds.StarterPackage2D
             // Update animator if we're dashing
             if (animator != null)
             {
-                animator.SetBool("IsDashing", isDashing);
+                animator.SetBool(animationParameters.IsDashing, isDashing);
             }
 
             // Handle wall jump input

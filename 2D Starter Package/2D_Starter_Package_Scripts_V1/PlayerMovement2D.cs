@@ -12,8 +12,10 @@ namespace DigitalWorlds.StarterPackage2D
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMovement2D : PlayerMovementBase
     {
+        [Header("Animation Settings")]
         [Tooltip("Drag in the player's animator to play animations for running and jumping.")]
         [SerializeField] protected Animator animator;
+        [SerializeField] protected AnimationParameters animationParameters;
 
         [Header("Ground Detection")]
         [Tooltip("Drag in a transform positioned at the player's feet. The ground check transform should be a child of the player.")]
@@ -184,7 +186,7 @@ namespace DigitalWorlds.StarterPackage2D
             // If assigned, set the animator's "IsRunning" parameter true or false based on whether there is horizontal movement input
             if (animator != null)
             {
-                animator.SetBool("IsRunning", isRunning);
+                animator.SetBool(animationParameters.IsRunning, isRunning);
             }
 
             // Handle jumping
@@ -203,7 +205,7 @@ namespace DigitalWorlds.StarterPackage2D
                 // If assigned, give the animator a "Jump" trigger
                 if (animator != null)
                 {
-                    animator.SetTrigger("Jump");
+                    animator.SetTrigger(animationParameters.Jump);
                 }
 
                 // Check if this was a jump off of the ground, or a mid-air jump
@@ -236,6 +238,19 @@ namespace DigitalWorlds.StarterPackage2D
             {
                 facingTransform.rotation *= Quaternion.Euler(0f, 180f, 0f);
             }
+        }
+
+        [System.Serializable]
+        public class AnimationParameters
+        {
+            [Tooltip("Bool parameter: " + nameof(IsRunning))]
+            public string IsRunning = "IsRunning";
+
+            [Tooltip("Trigger parameter: " + nameof(Jump))]
+            public string Jump = "Jump";
+
+            [Tooltip("(Only used by PlayerMovementAdvanced)\nBool parameter: " + nameof(IsDashing))]
+            public string IsDashing = "IsDashing";
         }
     }
 }
