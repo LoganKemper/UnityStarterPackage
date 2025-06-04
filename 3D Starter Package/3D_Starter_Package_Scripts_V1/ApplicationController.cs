@@ -7,7 +7,7 @@ using UnityEngine;
 namespace DigitalWorlds.StarterPackage3D
 {
     /// <summary>
-    /// Provides functionality for closing the game.
+    /// Provides functionality for quitting or pausing the game.
     /// </summary>
     public class ApplicationController : MonoBehaviour
     {
@@ -36,9 +36,30 @@ namespace DigitalWorlds.StarterPackage3D
             Debug.Log("Game quit! Exiting play mode...");
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Debug.Log("Game quit! Closing application...");
-        Application.Quit();
+            Debug.Log("Game quit! Closing application...");
+            Application.Quit();
 #endif
+        }
+
+        // This boolean can be checked anywhere else in the code with ApplicationController.GameIsPaused
+        public static bool GameIsPaused { get; private set; } = false;
+
+        // Call this from a UnityEvent to pause or resume the game
+        public void PauseGame(bool paused)
+        {
+            GameIsPaused = paused;
+
+            // Changing Time.timeScale affects the speed at which in-game time passes.
+            // When timeScale is 0, physics, animations, and more will be frozen.
+
+            if (paused)
+            {
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                Time.timeScale = 1f;
+            }
         }
     }
 }

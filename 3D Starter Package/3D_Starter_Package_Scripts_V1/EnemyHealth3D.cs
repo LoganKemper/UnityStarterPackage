@@ -30,6 +30,7 @@ namespace DigitalWorlds.StarterPackage3D
 
         [Tooltip("Optional: Drag in the enemy's animator for hit and death animations.")]
         [SerializeField] private Animator animator;
+        [SerializeField] private AnimationParameters animationParameters;
 
         [Tooltip("Optional: Drag in a slider UI element to use as a health bar.")]
         [SerializeField] private Slider healthBar;
@@ -101,7 +102,7 @@ namespace DigitalWorlds.StarterPackage3D
                 // If the animator has been assigned, send it a trigger
                 if (animator != null)
                 {
-                    animator.SetTrigger("Death");
+                    animator.SetTrigger(animationParameters.Death);
                 }
 
                 if (delayBeforeDying == 0f)
@@ -126,7 +127,7 @@ namespace DigitalWorlds.StarterPackage3D
                 // If the animator has been assigned, send it a trigger
                 if (animator != null)
                 {
-                    animator.SetTrigger("Hit");
+                    animator.SetTrigger(animationParameters.Hit);
                 }
 
                 onEnemyDamaged.Invoke();
@@ -159,6 +160,16 @@ namespace DigitalWorlds.StarterPackage3D
 
             // Finally, destroy this entire GameObject
             Destroy(gameObject);
+        }
+
+        [System.Serializable]
+        public class AnimationParameters
+        {
+            [Tooltip("Trigger parameter: " + nameof(Hit))]
+            public string Hit = "Hit";
+
+            [Tooltip("Trigger parameter: " + nameof(Death))]
+            public string Death = "Death";
         }
     }
 }

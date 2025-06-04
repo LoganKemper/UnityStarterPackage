@@ -11,8 +11,10 @@ namespace DigitalWorlds.StarterPackage3D
     /// </summary>
     public class ThirdPersonController : PlayerMovementBase
     {
+        [Header("Animation Settings")]
         [Tooltip("Optional: Assign the player's animator to add movement and jumping animation parameters.")]
         [SerializeField] private Animator animator;
+        [SerializeField] protected AnimationParameters animationParameters;
 
         [Header("Ground Detection")]
         [Tooltip("Drag in a ground check transform positioned just under the player.")]
@@ -145,7 +147,7 @@ namespace DigitalWorlds.StarterPackage3D
 
                 if (animator != null)
                 {
-                    animator.SetBool("IsWalking", true);
+                    animator.SetBool(animationParameters.IsRunning, true);
                 }
             }
             else
@@ -154,7 +156,7 @@ namespace DigitalWorlds.StarterPackage3D
 
                 if (animator != null)
                 {
-                    animator.SetBool("IsWalking", false);
+                    animator.SetBool(animationParameters.IsRunning, false);
                 }
             }
 
@@ -266,7 +268,7 @@ namespace DigitalWorlds.StarterPackage3D
 
                 if (animator != null)
                 {
-                    animator.SetTrigger("Jump");
+                    animator.SetTrigger(animationParameters.Jump);
                 }
             }
         }
@@ -300,6 +302,16 @@ namespace DigitalWorlds.StarterPackage3D
         private bool CheckIfGrounded()
         {
             return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
+        }
+
+        [System.Serializable]
+        public class AnimationParameters
+        {
+            [Tooltip("Bool parameter: " + nameof(IsRunning))]
+            public string IsRunning = "IsRunning";
+
+            [Tooltip("Trigger parameter: " + nameof(Jump))]
+            public string Jump = "Jump";
         }
     }
 }
