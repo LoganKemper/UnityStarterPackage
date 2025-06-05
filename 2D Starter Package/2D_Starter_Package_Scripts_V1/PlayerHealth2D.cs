@@ -185,6 +185,16 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            if (collision.gameObject.TryGetComponent(out Damager damager))
+            {
+                Alignment alignment = damager.alignment;
+                if (alignment == Alignment.Enemy || alignment == Alignment.Environment)
+                {
+                    SetHealth(currentHealth - damager.damage);
+                    return;
+                }
+            }
+
             if (collision.CompareTag("Enemy"))
             {
                 SetHealth(currentHealth - 1);
@@ -201,6 +211,16 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            if (collision.gameObject.TryGetComponent(out Damager damager))
+            {
+                Alignment alignment = damager.alignment;
+                if (alignment == Alignment.Enemy || alignment == Alignment.Environment)
+                {
+                    SetHealth(currentHealth - damager.damage);
+                    return;
+                }
+            }
+
             if (collision.collider.CompareTag("Enemy"))
             {
                 SetHealth(currentHealth - 1);

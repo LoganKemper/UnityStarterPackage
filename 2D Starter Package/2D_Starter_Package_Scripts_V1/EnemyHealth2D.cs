@@ -61,6 +61,16 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            if (collision.gameObject.TryGetComponent(out Damager damager))
+            {
+                Alignment alignment = damager.alignment;
+                if (alignment == Alignment.Player || alignment == Alignment.Environment)
+                {
+                    Hit(damager.damage);
+                    return;
+                }
+            }
+
             if (!string.IsNullOrEmpty(damageTagName) && collision.collider.CompareTag(damageTagName))
             {
                 Hit();
@@ -69,13 +79,23 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            if (collision.gameObject.TryGetComponent(out Damager damager))
+            {
+                Alignment alignment = damager.alignment;
+                if (alignment == Alignment.Player || alignment == Alignment.Environment)
+                {
+                    Hit(damager.damage);
+                    return;
+                }
+            }
+
             if (!string.IsNullOrEmpty(damageTagName) && collision.CompareTag(damageTagName))
             {
                 Hit();
             }
         }
 
-        public void Hit()
+        public void Hit(int damage = 1)
         {
             if (isDying)
             {
@@ -84,7 +104,7 @@ namespace DigitalWorlds.StarterPackage2D
             }
 
             // Reduce health
-            health--;
+            health -= damage;
 
             if (healthBar != null)
             {
