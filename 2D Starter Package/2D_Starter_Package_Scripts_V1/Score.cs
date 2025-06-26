@@ -9,7 +9,6 @@ using TMPro;
 
 namespace DigitalWorlds.StarterPackage2D
 {
-
     /// <summary>
     /// Used for keeping track of a score value and displaying it on the UI. Can be used for the number of items collected, number of enemies defeated, etc.
     /// </summary>
