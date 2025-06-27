@@ -4,6 +4,7 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DigitalWorlds.StarterPackage2D
 {
@@ -28,11 +29,15 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("How many seconds to wait after losing the player before resuming patrol.")]
         [SerializeField] private float pauseBeforePatrolling = 1f;
 
+        [Header("Patrol Events")]
+        [SerializeField] private PatrolEvents patrolEvents;
+
         // This "buffer" is used to prevent rapid switching between chasing and idle states
         private const float DISTANCE_BUFFER = 1.2f;
 
         private PlayerStealth2D playerStealth;
         private Coroutine returnToPatrolCoroutine;
+        private bool isChasing = true;
 
         protected override void Start()
         {
@@ -72,6 +77,12 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (shouldChase)
             {
+                if (!isChasing)
+                {
+                    isChasing = true;
+                    patrolEvents.onChasePlayer.Invoke();
+                }
+
                 // Cancel pending patrol resume if chasing
                 if (returnToPatrolCoroutine != null)
                 {
@@ -86,6 +97,12 @@ namespace DigitalWorlds.StarterPackage2D
             }
             else if (shouldStopChasing && returnToPatrolCoroutine == null)
             {
+                if (isChasing)
+                {
+                    isChasing = false;
+                    patrolEvents.onPatrol.Invoke();
+                }
+
                 returnToPatrolCoroutine = StartCoroutine(WaitThenReturnToPatrol());
             }
         }
@@ -116,6 +133,25 @@ namespace DigitalWorlds.StarterPackage2D
             yield return new WaitForSeconds(pauseBeforePatrolling);
             StartPatrolling();
             returnToPatrolCoroutine = null;
+        }
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            detectionRange = Mathf.Max(0, detectionRange);
+            stoppingThreshold = Mathf.Max(0, stoppingThreshold);
+            pauseBeforePatrolling = Mathf.Max(0, pauseBeforePatrolling);
+        }
+
+        [System.Serializable]
+        public class PatrolEvents
+        {
+            [Space(20)]
+            public UnityEvent onChasePlayer;
+
+            [Space(20)]
+            public UnityEvent onPatrol;
         }
     }
 }

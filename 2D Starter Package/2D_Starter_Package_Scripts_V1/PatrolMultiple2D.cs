@@ -192,7 +192,7 @@ namespace DigitalWorlds.StarterPackage2D
         }
 
         // Enforce minimum values in the inspector
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             if (patrolSpeed < 0)
             {
