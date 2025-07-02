@@ -49,7 +49,6 @@ namespace DigitalWorlds.StarterPackage3D
         {
             if (respawn != null && respawnPoint != null)
             {
-                respawn.position = respawnPoint.position;
                 respawn.SetPositionAndRotation(respawnPoint.position, respawnPoint.rotation);
                 onCheckpoint.Invoke();
             }

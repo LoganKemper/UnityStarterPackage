@@ -119,7 +119,7 @@ namespace DigitalWorlds.StarterPackage3D
             }
         }
 
-        private void SetHealth(int newHealth)
+        public void SetHealth(int newHealth)
         {
             if (isDying)
             {
