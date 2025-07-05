@@ -25,7 +25,7 @@ namespace DigitalWorlds.StarterPackage2D
             if (Input.GetKeyDown(KeyCode.Escape) && quitGameOnEscape)
             {
 #if !UNITY_EDITOR
-            QuitGame();
+                QuitGame();
 #endif
             }
         }
