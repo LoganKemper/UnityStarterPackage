@@ -2,7 +2,9 @@
 // University of Florida's Digital Worlds Institute
 // Written by Logan Kemper
 
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DigitalWorlds.StarterPackage3D
 {
@@ -12,7 +14,7 @@ namespace DigitalWorlds.StarterPackage3D
     public class PatrolChase3D : PatrolMultiple3D
     {
         [Header("Chase")]
-        [Tooltip("Drag in the player GameObject.")]
+        [Tooltip("Drag in the player GameObject. If the player has the PlayerStealth3D component on it, PatrolChase3D will check if the player is in cover before chasing them.")]
         [SerializeField] private Transform playerTransform;
 
         [Tooltip("How fast the GameObject should move towards the player.")]
@@ -24,8 +26,18 @@ namespace DigitalWorlds.StarterPackage3D
         [Tooltip("The distance from the player at which this GameObject should stop chasing. Set to 0 and this GameObject will try to ram itself into the player.")]
         [SerializeField] private float stoppingThreshold = 1f;
 
+        [Tooltip("How many seconds to wait after losing the player before resuming patrol.")]
+        [SerializeField] private float pauseBeforePatrolling = 1f;
+
+        [Header("Patrol Events")]
+        [SerializeField] private PatrolEvents patrolEvents;
+
         // This "buffer" is used to prevent rapid switching between chasing and idle states
         private const float DISTANCE_BUFFER = 1.2f;
+
+        private PlayerStealth3D playerStealth;
+        private Coroutine returnToPatrolCoroutine;
+        private bool isChasing = true;
 
         protected override void Start()
         {
@@ -34,7 +46,17 @@ namespace DigitalWorlds.StarterPackage3D
             // If playerTransform is not assigned, try to find it by tag
             if (playerTransform == null)
             {
-                playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+                GameObject playerGameObject = GameObject.FindGameObjectWithTag("Player");
+                if (playerGameObject != null)
+                {
+                    playerTransform = playerGameObject.transform;
+                }
+            }
+
+            // Attempt to get the PlayerStealth component
+            if (playerTransform != null)
+            {
+                playerStealth = playerTransform.GetComponent<PlayerStealth3D>();
             }
         }
 
@@ -49,22 +71,39 @@ namespace DigitalWorlds.StarterPackage3D
             // Get the distance from this GameObject to the player
             float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
 
-            if (distanceToPlayer < detectionRange)
+            // If in the detection range and not in the stopping threshold, chase the player
+            bool shouldChase = distanceToPlayer < detectionRange && IsPlayerVisible();
+            bool shouldStopChasing = distanceToPlayer > detectionRange * DISTANCE_BUFFER || !IsPlayerVisible();
+
+            if (shouldChase)
             {
+                if (!isChasing)
+                {
+                    isChasing = true;
+                    patrolEvents.onChasePlayer.Invoke();
+                }
+
+                // Cancel pending patrol resume if chasing
+                if (returnToPatrolCoroutine != null)
+                {
+                    StopCoroutine(returnToPatrolCoroutine);
+                    returnToPatrolCoroutine = null;
+                }
+
                 if (distanceToPlayer > stoppingThreshold)
                 {
-                    // If in the detection range and not in the stopping threshold, chase the player
                     ChasePlayer();
                 }
-                else if (distanceToPlayer < stoppingThreshold * DISTANCE_BUFFER)
-                {
-                    // If inside the stopping threshold, go idle
-                }
             }
-            else if (distanceToPlayer > detectionRange * DISTANCE_BUFFER)
+            else if (shouldStopChasing && returnToPatrolCoroutine == null)
             {
-                // If out of the detection range, go back to patrolling
-                StartPatrolling();
+                if (isChasing)
+                {
+                    isChasing = false;
+                    patrolEvents.onPatrol.Invoke();
+                }
+
+                returnToPatrolCoroutine = StartCoroutine(WaitThenReturnToPatrol());
             }
         }
 
@@ -94,12 +133,36 @@ namespace DigitalWorlds.StarterPackage3D
             transform.position = Vector3.MoveTowards(transform.position, playerTransform.position, chaseSpeed * Time.deltaTime);
         }
 
+        private bool IsPlayerVisible()
+        {
+            // If there's no stealth script, treat player as always visible
+            return playerStealth == null || !playerStealth.InCover;
+        }
+
+        private IEnumerator WaitThenReturnToPatrol()
+        {
+            yield return new WaitForSeconds(pauseBeforePatrolling);
+            StartPatrolling();
+            returnToPatrolCoroutine = null;
+        }
+
         protected override void OnValidate()
         {
             base.OnValidate();
-            chaseSpeed = Mathf.Max(0, chaseSpeed);
+
             detectionRange = Mathf.Max(0, detectionRange);
             stoppingThreshold = Mathf.Max(0, stoppingThreshold);
+            pauseBeforePatrolling = Mathf.Max(0, pauseBeforePatrolling);
+        }
+
+        [System.Serializable]
+        public class PatrolEvents
+        {
+            [Space(20)]
+            public UnityEvent onChasePlayer;
+
+            [Space(20)]
+            public UnityEvent onPatrol;
         }
     }
 }
