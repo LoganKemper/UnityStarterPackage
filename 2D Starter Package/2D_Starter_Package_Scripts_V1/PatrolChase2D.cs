@@ -29,8 +29,18 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("How many seconds to wait after losing the player before resuming patrol.")]
         [SerializeField] private float pauseBeforePatrolling = 1f;
 
+        [Tooltip("How the chase behavior should work.")]
+        [SerializeField] private ChaseMode chaseMode = ChaseMode.Direct;
+
         [Header("Patrol Events")]
         [SerializeField] private PatrolEvents patrolEvents;
+
+        public enum ChaseMode
+        {
+            Direct,
+            HorizontalOnly,
+            VerticalOnly
+        }
 
         // This "buffer" is used to prevent rapid switching between chasing and idle states
         private const float DISTANCE_BUFFER = 1.2f;
@@ -118,8 +128,24 @@ namespace DigitalWorlds.StarterPackage2D
                 FlipIfNeeded(playerTransform);
             }
 
-            // Move directly towards the player at the chase speed
-            transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, chaseSpeed * Time.deltaTime);
+            Vector2 currentPosition = transform.position;
+            Vector2 targetPosition = playerTransform.position;
+            Vector2 moveTarget = targetPosition;
+
+            switch (chaseMode)
+            {
+                case ChaseMode.HorizontalOnly:
+                    moveTarget = new Vector2(targetPosition.x, currentPosition.y);
+                    break;
+                case ChaseMode.VerticalOnly:
+                    moveTarget = new Vector2(currentPosition.x, targetPosition.y);
+                    break;
+                case ChaseMode.Direct:
+                default:
+                    break;
+            }
+
+            transform.position = Vector2.MoveTowards(currentPosition, moveTarget, chaseSpeed * Time.deltaTime);
         }
 
         private bool IsPlayerVisible()

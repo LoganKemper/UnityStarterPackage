@@ -15,6 +15,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Enter the tag name that should register collisions.")]
         [SerializeField] private string tagName;
 
+        [Tooltip("Choose whether to check for the required item in the player's inventory or in the collectable manager.")]
+        [SerializeField] private KeyLocation keyLocation = KeyLocation.Inventory;
+
         [Tooltip("The name of the item that the lock requires.")]
         [SerializeField] private string requiredItemName;
 
@@ -34,6 +37,12 @@ namespace DigitalWorlds.StarterPackage2D
         [SerializeField] private UnityEvent onUnlocked, onUnlockFailed;
 
         private Inventory inventory;
+
+        private enum KeyLocation
+        {
+            Inventory,
+            CollectableManager
+        }
 
         private void Update()
         {
@@ -73,20 +82,39 @@ namespace DigitalWorlds.StarterPackage2D
         // Check if the required items are in the inventory, then handle the unlocking
         private void CheckUnlock()
         {
-            int count = inventory.GetItemCount(requiredItemName);
-            if (count >= requiredItemCount)
+            if (keyLocation == KeyLocation.Inventory)
             {
-                if (deleteItemsWhenUsed)
+                int count = inventory.GetItemCount(requiredItemName);
+                if (count >= requiredItemCount)
                 {
-                    inventory.DeleteItemFromInventory(requiredItemName, requiredItemCount);
-                }
+                    if (deleteItemsWhenUsed)
+                    {
+                        inventory.DeleteItemFromInventory(requiredItemName, requiredItemCount);
+                    }
 
-                onUnlocked.Invoke();
+                    onUnlocked.Invoke();
+                    return;
+                }
             }
-            else
+            else if (keyLocation == KeyLocation.CollectableManager)
             {
-                onUnlockFailed.Invoke();
+                if (CollectableManager.Instance != null)
+                {
+                    var collectable = CollectableManager.Instance.FindCollectable(requiredItemName);
+                    if (collectable != null && collectable.count >= requiredItemCount)
+                    {
+                        if (deleteItemsWhenUsed)
+                        {
+                            CollectableManager.Instance.AddCollectable(requiredItemName, -requiredItemCount);
+                        }
+
+                        onUnlocked.Invoke();
+                        return;
+                    }
+                }
             }
+
+            onUnlockFailed.Invoke();
         }
     }
 }

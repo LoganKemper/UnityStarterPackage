@@ -61,10 +61,7 @@ namespace DigitalWorlds.StarterPackage2D
         private void OnValidate()
         {
             // Prevent flashDuration from being set to negative
-            if (flashDuration < 0)
-            {
-                flashDuration = 0;
-            }
+            flashDuration = Mathf.Max(flashDuration, 0);
         }
     }
 }

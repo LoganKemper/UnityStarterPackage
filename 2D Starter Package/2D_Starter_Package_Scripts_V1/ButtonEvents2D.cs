@@ -13,7 +13,7 @@ namespace DigitalWorlds.StarterPackage2D
     public class ButtonEvents2D : MonoBehaviour
     {
         [Tooltip("Enter the tag name that should register triggers. Leave blank for any tag to be used.")]
-        [SerializeField] private string tagName;
+        [SerializeField] private string tagName = "Player";
 
         [Tooltip("If false, the button can be activated at any time.")]
         [SerializeField] private bool requiresTrigger = true;
