@@ -9,7 +9,7 @@ Included is...
 - A dialogue system for use in 2D or 3D. 
 - Documention PDFs for each script collection. 
 
-All scripts were written by Logan Kemper unless noted otherwise. Feel free to use, fork, remix, or share however you like. 
+All scripts were written by Logan Kemper unless noted otherwise. Feel free to use, fork, remix, or share however you would like. 
 
 ## How to Use
 
