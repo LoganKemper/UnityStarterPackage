@@ -68,7 +68,15 @@ namespace DigitalWorlds.StarterPackage2D
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Player || alignment == Alignment.Environment)
                 {
-                    Hit(damager.damage);
+                    if (damager.healInstead)
+                    {
+                        Heal(damager.damage);
+                    }
+                    else
+                    {
+                        Hit(damager.damage);
+                    }
+
                     return;
                 }
             }
@@ -86,7 +94,15 @@ namespace DigitalWorlds.StarterPackage2D
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Player || alignment == Alignment.Environment)
                 {
-                    Hit(damager.damage);
+                    if (damager.healInstead)
+                    {
+                        Heal(damager.damage);
+                    }
+                    else
+                    {
+                        Hit(damager.damage);
+                    }
+
                     return;
                 }
             }
@@ -138,7 +154,7 @@ namespace DigitalWorlds.StarterPackage2D
                     Invoke(nameof(Die), delayBeforeDying); // This will call the Die method after delayBeforeDying seconds
                 }
             }
-            else
+            else if (damage > 0)
             {
                 // Play hit sound if it has been assigned
                 if (hitSound != null)
@@ -185,6 +201,14 @@ namespace DigitalWorlds.StarterPackage2D
 
             // Finally, destroy this entire GameObject
             Destroy(gameObject);
+        }
+
+        public void Heal(int amount)
+        {
+            if (amount > 0)
+            {
+                Hit(-amount);
+            }
         }
 
         [System.Serializable]

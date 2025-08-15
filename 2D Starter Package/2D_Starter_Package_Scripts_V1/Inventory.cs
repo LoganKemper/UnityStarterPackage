@@ -135,9 +135,11 @@ namespace DigitalWorlds.StarterPackage2D
         // Add an item to the inventory by a name and sprite
         public void AddItemToInventory(string name = "", Sprite sprite = null)
         {
-            ItemData itemData = new();
-            itemData.name = name;
-            itemData.sprite = sprite;
+            ItemData itemData = new()
+            {
+                name = name,
+                sprite = sprite
+            };
             items.Add(itemData);
 
             AddItemToUI(itemData);

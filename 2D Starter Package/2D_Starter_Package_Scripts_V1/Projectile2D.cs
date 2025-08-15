@@ -17,7 +17,7 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("How long in seconds until the projectile disappears.")]
         [SerializeField] private float lifetime = 2f;
 
-        [Tooltip("Speed of the projectile relative to the speed of GameObject it came from.")]
+        [Tooltip("Use this as a multiplier on the initial speed of the projectile.")]
         [SerializeField] private float relativeVelocity = 1f;
 
         [Tooltip("Whether the projectile should destroy itself when its collider is set to trigger and it collides with another collider.")]
@@ -44,7 +44,7 @@ namespace DigitalWorlds.StarterPackage2D
         }
 
         // Called from the script that created this projectile to launch it
-        // This Launch method takes in facingRight to determine which direction to travel in
+        // This Launch method takes in the facingRight bool to determine which direction to travel in
         public void Launch(float emitVelocity, bool facingRight, GameObject origin)
         {
             // Cache the GameObject that this projectile originated from

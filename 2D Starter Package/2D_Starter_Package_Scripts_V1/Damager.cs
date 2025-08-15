@@ -11,13 +11,18 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class Damager : MonoBehaviour
     {
-        [Tooltip("This determines who will be damaged by this Damager.\n\n" +
+        [Header("Read Alignment's Tooltip For Explanation")]
+        [Tooltip("Alignment determines who will be affected by this Damager. " +
             "The player will be damaged by Enemy and Environment, but not Player. " +
-            "Enemies will be damaged by Player and Environment, but not Enemy")]
+            "Enemies will be damaged by Player and Environment, but not Enemy.")]
         public Alignment alignment = Alignment.Player;
 
+        [Header("Damage Settings")]
         [Tooltip("How many points of damage is dealt by this Damager.")]
         public int damage = 1;
+
+        [Tooltip("Enable to make this Damager heal instead of deal damage.")]
+        public bool healInstead = false;
     }
 
     public enum Alignment

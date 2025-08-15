@@ -19,6 +19,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Optional: Assign a text component to display the timer on the UI.")]
         [SerializeField] private TMP_Text timerText;
 
+        [Tooltip("Optional: Prefix written before the timer text.")]
+        [SerializeField] private string timerTextPrefix = "Timer: ";
+
         [Tooltip("How many numbers after the decimal place on the timer text.")]
         [SerializeField] private int decimalPlaces = 2;
 
@@ -47,15 +50,15 @@ namespace DigitalWorlds.StarterPackage2D
         {
             if (timerInProgress)
             {
-                if (timer >= 0)
+                timer -= Time.deltaTime;
+
+                if (timer <= 0f)
                 {
-                    timer -= Time.deltaTime;
-                    timer = Mathf.Max(0f, timer);
-                }
-                else
-                {
+                    timer = 0f;
+                    UpdateTimerDisplay();
                     onTimerFinished.Invoke();
                     StopTimer();
+                    return;
                 }
 
                 UpdateTimerDisplay();
@@ -87,7 +90,8 @@ namespace DigitalWorlds.StarterPackage2D
             {
                 return decimalPlaces == 0
                     ? $"{minutes:00}:{Mathf.FloorToInt(seconds):00}"
-                    : $"{minutes:00}:{Mathf.FloorToInt(seconds):00}.{(seconds % 1).ToString($"F{decimalPlaces}")}".Replace("0.", "");
+                    : $"{minutes:00}:{Mathf.FloorToInt(seconds):00}." +
+                      $"{(seconds % 1).ToString($"F{decimalPlaces}")}".Replace("0.", "");
             }
         }
 

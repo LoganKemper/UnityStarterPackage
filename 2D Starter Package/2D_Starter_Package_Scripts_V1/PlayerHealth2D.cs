@@ -183,6 +183,14 @@ namespace DigitalWorlds.StarterPackage2D
             onPlayerRespawn.Invoke();
         }
 
+        public void Heal(int amount)
+        {
+            if (amount > 0)
+            {
+                SetHealth(currentHealth + amount);
+            }
+        }
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.TryGetComponent(out Damager damager))
@@ -190,7 +198,15 @@ namespace DigitalWorlds.StarterPackage2D
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Enemy || alignment == Alignment.Environment)
                 {
-                    SetHealth(currentHealth - damager.damage);
+                    if (damager.healInstead)
+                    {
+                        SetHealth(currentHealth + damager.damage);
+                    }
+                    else
+                    {
+                        SetHealth(currentHealth - damager.damage);
+                    }
+
                     return;
                 }
             }
@@ -216,7 +232,15 @@ namespace DigitalWorlds.StarterPackage2D
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Enemy || alignment == Alignment.Environment)
                 {
-                    SetHealth(currentHealth - damager.damage);
+                    if (damager.healInstead)
+                    {
+                        SetHealth(currentHealth + damager.damage);
+                    }
+                    else
+                    {
+                        SetHealth(currentHealth - damager.damage);
+                    }
+
                     return;
                 }
             }
