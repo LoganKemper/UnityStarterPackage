@@ -150,13 +150,25 @@ namespace DigitalWorlds.StarterPackage2D
         }
 
         // Draws lines and icons in the scene view to visualizing the patrol path
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
             // Only draw gizmos if there are two or more waypoints
             if (waypoints == null || waypoints.Count < 2)
             {
                 return;
             }
+
+            if (Camera.current == null)
+            {
+                return;
+            }
+
+            // Fixed gizmo size at any scale
+            Vector3 pos = transform.position;
+            Vector3 screenPos = Camera.current.WorldToScreenPoint(pos);
+            Vector3 screenPos2 = screenPos + Vector3.right * 10f;
+            Vector3 worldPos2 = Camera.current.ScreenToWorldPoint(screenPos2);
+            float worldSize = (worldPos2 - pos).magnitude;
 
             Gizmos.color = Color.yellow;
 
@@ -180,14 +192,14 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (waypoints[0] != null)
             {
-                Gizmos.DrawSphere(waypoints[0].position, 0.25f);
+                Gizmos.DrawSphere(waypoints[0].position, worldSize);
             }
 
             // If the patrol neither loops nor ping pongs, draw a square at the last waypoint
             if (patrolType == PatrolType.Neither && waypoints[waypoints.Count - 1] != null)
             {
                 Gizmos.color = Color.red;
-                Gizmos.DrawCube(waypoints[waypoints.Count - 1].position, Vector3.one * 0.5f);
+                Gizmos.DrawCube(waypoints[waypoints.Count - 1].position, 2 * worldSize * Vector3.one);
             }
         }
 

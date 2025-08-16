@@ -44,7 +44,7 @@ namespace DigitalWorlds.StarterPackage2D
         [Space(20)]
         [SerializeField] private UnityEvent onEnemyDamaged, onEnemyDeath;
 
-        public event System.Action<int> OnEnemyLostHealth;
+        public event System.Action<int, int> OnEnemyHealthChanged;
 
         private int maxHealth;
         private bool isDying = false;
@@ -115,14 +115,19 @@ namespace DigitalWorlds.StarterPackage2D
 
         public void Hit(int damage = 1)
         {
-            if (isDying)
+            if (isDying || damage == 0)
             {
                 // Ignore the hit and return out of this method if the enemy is already dying
                 return;
             }
 
+            int oldHealth = health;
+
             // Reduce health, but prevent going below 0
             health = Mathf.Max(0, health - damage);
+
+            // Invoke health changed C# event
+            OnEnemyHealthChanged?.Invoke(oldHealth, health);
 
             if (healthBar != null)
             {
@@ -170,9 +175,6 @@ namespace DigitalWorlds.StarterPackage2D
 
                 // Invoke damaged UnityEvent
                 onEnemyDamaged.Invoke();
-
-                // Invoke lost health C# event
-                OnEnemyLostHealth?.Invoke(health);
             }
         }
 
