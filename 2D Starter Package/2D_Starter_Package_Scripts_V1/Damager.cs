@@ -23,6 +23,16 @@ namespace DigitalWorlds.StarterPackage2D
 
         [Tooltip("Enable to make this Damager heal instead of deal damage.")]
         public bool healInstead = false;
+
+        public void SetDamage(int damage)
+        {
+            this.damage = damage;
+        }
+
+        public void SetHealInstead(bool healInstead)
+        {
+            this.healInstead = healInstead;
+        }
     }
 
     public enum Alignment

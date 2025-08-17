@@ -63,7 +63,7 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.TryGetComponent(out Damager damager))
+            if (collision.gameObject.TryGetComponent(out Damager damager) && damager.enabled)
             {
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Player || alignment == Alignment.Environment)
@@ -89,7 +89,7 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.TryGetComponent(out Damager damager))
+            if (collision.gameObject.TryGetComponent(out Damager damager) && damager.enabled)
             {
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Player || alignment == Alignment.Environment)
