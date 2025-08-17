@@ -73,7 +73,7 @@ namespace DigitalWorlds.StarterPackage2D
         }
 
         // Draws a line in the scene view to visualize the patrol path
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             if (pointB == null)
             {
@@ -86,11 +86,9 @@ namespace DigitalWorlds.StarterPackage2D
             }
 
             // Fixed gizmo size at any scale
-            Vector3 pos = transform.position;
-            Vector3 screenPos = Camera.current.WorldToScreenPoint(pos);
-            Vector3 screenPos2 = screenPos + Vector3.right * 10f;
-            Vector3 worldPos2 = Camera.current.ScreenToWorldPoint(screenPos2);
-            float worldSize = (worldPos2 - pos).magnitude;
+            Vector3 screenPosition = Camera.current.WorldToScreenPoint(transform.position) + Vector3.right * 10f;
+            Vector3 worldPosition = Camera.current.ScreenToWorldPoint(screenPosition);
+            float worldSize = (worldPosition - transform.position).magnitude;
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(transform.position, pointB.position);

@@ -150,7 +150,7 @@ namespace DigitalWorlds.StarterPackage2D
         }
 
         // Draws lines and icons in the scene view to visualizing the patrol path
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             // Only draw gizmos if there are two or more waypoints
             if (waypoints == null || waypoints.Count < 2)
@@ -164,19 +164,16 @@ namespace DigitalWorlds.StarterPackage2D
             }
 
             // Fixed gizmo size at any scale
-            Vector3 pos = transform.position;
-            Vector3 screenPos = Camera.current.WorldToScreenPoint(pos);
-            Vector3 screenPos2 = screenPos + Vector3.right * 10f;
-            Vector3 worldPos2 = Camera.current.ScreenToWorldPoint(screenPos2);
-            float worldSize = (worldPos2 - pos).magnitude;
-
-            Gizmos.color = Color.yellow;
+            Vector3 screenPosition = Camera.current.WorldToScreenPoint(transform.position) + Vector3.right * 10f;
+            Vector3 worldPosition = Camera.current.ScreenToWorldPoint(screenPosition);
+            float worldSize = (worldPosition - transform.position).magnitude;
 
             // Draw a line connecting each waypoint
             for (int i = 0; i < waypoints.Count - 1; i++)
             {
                 if (waypoints[i] != null && waypoints[i + 1] != null)
                 {
+                    Gizmos.color = i == 0 && waypoints.Count > 2 ? Color.green : Color.yellow;
                     Gizmos.DrawLine(waypoints[i].position, waypoints[i + 1].position);
                 }
             }
@@ -188,10 +185,9 @@ namespace DigitalWorlds.StarterPackage2D
             }
 
             // Draw a green circle at the beginning of the path
-            Gizmos.color = Color.green;
-
             if (waypoints[0] != null)
             {
+                Gizmos.color = Color.green;
                 Gizmos.DrawSphere(waypoints[0].position, worldSize);
             }
 
@@ -206,20 +202,9 @@ namespace DigitalWorlds.StarterPackage2D
         // Enforce minimum values in the inspector
         protected virtual void OnValidate()
         {
-            if (patrolSpeed < 0)
-            {
-                patrolSpeed = 0;
-            }
-
-            if (pauseAtWaypoint < 0)
-            {
-                pauseAtWaypoint = 0;
-            }
-
-            if (distanceThreshold < 0)
-            {
-                distanceThreshold = 0f;
-            }
+            patrolSpeed = Mathf.Max(0, patrolSpeed);
+            pauseAtWaypoint = Mathf.Max(0, pauseAtWaypoint);
+            distanceThreshold = Mathf.Max(0, distanceThreshold);
         }
     }
 }
