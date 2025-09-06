@@ -40,5 +40,17 @@ namespace DigitalWorlds.StarterPackage2D
 
             CollectableManager.Instance.AddCollectable(collectableName, amount);
         }
+
+        // Call from a UnityEvent to set the collectable count to a particular value
+        public void SetCollectableTo(int value)
+        {
+            if (CollectableManager.Instance == null)
+            {
+                Debug.LogWarning("CollectableManager not found!");
+                return;
+            }
+
+            CollectableManager.Instance.SetCollectable(collectableName, value);
+        }
     }
 }

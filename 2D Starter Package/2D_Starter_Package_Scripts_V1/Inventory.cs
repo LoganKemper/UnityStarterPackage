@@ -154,7 +154,9 @@ namespace DigitalWorlds.StarterPackage2D
             }
 
             GameObject newItem = new(itemData.name);
-            newItem.AddComponent<Image>().sprite = itemData.sprite;
+            Image image = newItem.AddComponent<Image>();
+            image.sprite = itemData.sprite;
+            image.preserveAspect = true;
             newItem.transform.SetParent(layoutGroup.transform);
             newItem.transform.localScale = Vector3.one;
         }

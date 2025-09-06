@@ -36,7 +36,7 @@ namespace DigitalWorlds.StarterPackage2D
             public UnityEvent<int> onCollectableUpdated;
         }
 
-        private static Dictionary<string, int> persistentValues = new();
+        private static readonly Dictionary<string, int> persistentValues = new();
 
         // This will reset persistentValues when the game starts
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -48,7 +48,7 @@ namespace DigitalWorlds.StarterPackage2D
         [SerializeField] private CollectableDisplay[] collectableDisplays;
 
         // This class uses the singleton pattern.
-        // This means that it can be accessed from other scripts without a direct reference.
+        // This means that it can be accessed from other scripts without a direct object reference.
         // There should only be *one* of a given type of singleton in the scene at once.
         // Access this singleton by using CollectableManager.Instance...
         public static CollectableManager Instance { get; private set; }
@@ -83,6 +83,27 @@ namespace DigitalWorlds.StarterPackage2D
             if (collectable != null)
             {
                 collectable.count += count;
+
+                if (collectable.persistentCollectable)
+                {
+                    persistentValues[collectable.collectableName] = collectable.count;
+                }
+
+                UpdateCollectableText(collectable);
+                collectable.onCollectableUpdated.Invoke(collectable.count);
+            }
+            else
+            {
+                Debug.LogWarning("No collectable named \"" + name + "\" found");
+            }
+        }
+
+        public void SetCollectable(string name, int count)
+        {
+            var collectable = FindCollectable(name);
+            if (collectable != null)
+            {
+                collectable.count = count;
 
                 if (collectable.persistentCollectable)
                 {
