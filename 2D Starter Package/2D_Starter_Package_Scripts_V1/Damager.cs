@@ -21,12 +21,20 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("How many points of damage is dealt by this Damager.")]
         public int damage = 1;
 
+        [Tooltip("If true, this Damager will instantly kill the target, regardless of invincibility time.")]
+        public bool instakill = false;
+
         [Tooltip("Enable to make this Damager heal instead of deal damage.")]
         public bool healInstead = false;
 
         public void SetDamage(int damage)
         {
             this.damage = damage;
+        }
+
+        public void SetInstakill(bool instakill)
+        {
+            this.instakill = instakill;
         }
 
         public void SetHealInstead(bool healInstead)

@@ -2,6 +2,7 @@
 // University of Florida's Digital Worlds Institute
 // Written by Logan Kemper
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -18,6 +19,9 @@ namespace DigitalWorlds.StarterPackage2D
 
         [Tooltip("Enter the name of the tag that should damage this enemy.")]
         [SerializeField] private string damageTagName = "PlayerAttack";
+
+        [Tooltip("Time in seconds that the enemy will be invincible after taking damage.")]
+        [SerializeField] private float invincibilityTime = 0.1f;
 
         [Tooltip("Optional: Sound effect when enemy is hit.")]
         [SerializeField] private AudioClip hitSound;
@@ -48,6 +52,8 @@ namespace DigitalWorlds.StarterPackage2D
 
         private int maxHealth;
         private bool isDying = false;
+        private bool isInvincible = false;
+        private Coroutine invincibilityRoutine;
 
         private void Start()
         {
@@ -68,13 +74,19 @@ namespace DigitalWorlds.StarterPackage2D
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Player || alignment == Alignment.Environment)
                 {
+                    if (damager.instakill)
+                    {
+                        TakeDamage(health, bypassInvincibility: true);
+                        return;
+                    }
+
                     if (damager.healInstead)
                     {
                         Heal(damager.damage);
                     }
                     else
                     {
-                        Hit(damager.damage);
+                        TakeDamage(damager.damage);
                     }
 
                     return;
@@ -83,7 +95,7 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (!string.IsNullOrEmpty(damageTagName) && collision.collider.CompareTag(damageTagName))
             {
-                Hit();
+                TakeDamage();
             }
         }
 
@@ -94,13 +106,19 @@ namespace DigitalWorlds.StarterPackage2D
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Player || alignment == Alignment.Environment)
                 {
+                    if (damager.instakill)
+                    {
+                        TakeDamage(health, bypassInvincibility: true);
+                        return;
+                    }
+
                     if (damager.healInstead)
                     {
                         Heal(damager.damage);
                     }
                     else
                     {
-                        Hit(damager.damage);
+                        TakeDamage(damager.damage);
                     }
 
                     return;
@@ -109,15 +127,34 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (!string.IsNullOrEmpty(damageTagName) && collision.CompareTag(damageTagName))
             {
-                Hit();
+                TakeDamage();
             }
         }
 
-        public void Hit(int damage = 1)
+        public void Heal(int amount)
+        {
+            if (amount > 0)
+            {
+                TakeDamage(-amount, bypassInvincibility: true);
+            }
+        }
+
+        public void DealDamage(int amount)
+        {
+            TakeDamage(amount, true);
+        }
+
+        private void TakeDamage(int damage = 1, bool bypassInvincibility = false)
         {
             if (isDying || damage == 0)
             {
                 // Ignore the hit and return out of this method if the enemy is already dying
+                return;
+            }
+
+            // Ignore damage when invincible unless explicitly bypassed
+            if (damage > 0 && isInvincible && !bypassInvincibility)
+            {
                 return;
             }
 
@@ -136,6 +173,8 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (health <= 0)
             {
+                StopInvincibility();
+
                 // Play death sound if it has been assigned
                 if (deathSound != null)
                 {
@@ -175,6 +214,8 @@ namespace DigitalWorlds.StarterPackage2D
 
                 // Invoke damaged UnityEvent
                 onEnemyDamaged.Invoke();
+
+                StartInvincibility();
             }
         }
 
@@ -205,12 +246,53 @@ namespace DigitalWorlds.StarterPackage2D
             Destroy(gameObject);
         }
 
-        public void Heal(int amount)
+        private void StartInvincibility()
         {
-            if (amount > 0)
+            if (invincibilityTime <= 0f)
             {
-                Hit(-amount);
+                return;
             }
+
+            if (invincibilityRoutine != null)
+            {
+                StopCoroutine(invincibilityRoutine);
+            }
+
+            invincibilityRoutine = StartCoroutine(InvincibilityCoroutine());
+        }
+
+        private IEnumerator InvincibilityCoroutine()
+        {
+            isInvincible = true;
+            float t = 0f;
+
+            while (t < invincibilityTime)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
+
+            isInvincible = false;
+            invincibilityRoutine = null;
+        }
+
+        private void StopInvincibility()
+        {
+            if (invincibilityRoutine != null)
+            {
+                StopCoroutine(invincibilityRoutine);
+                invincibilityRoutine = null;
+            }
+
+            isInvincible = false;
+        }
+
+        private void OnValidate()
+        {
+            // Enforce minimum values
+            invincibilityTime = Mathf.Max(0f, invincibilityTime);
+            delayBeforeDying = Mathf.Max(0f, delayBeforeDying);
+            health = Mathf.Max(1, health);
         }
 
         [System.Serializable]

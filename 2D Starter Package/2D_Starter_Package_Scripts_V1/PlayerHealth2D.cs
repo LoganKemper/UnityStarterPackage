@@ -2,6 +2,7 @@
 // University of Florida's Digital Worlds Institute
 // Written by Logan Kemper
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PlayerHealth2D : MonoBehaviour
     {
+        [Header("Health Settings")]
         [Tooltip("The player's maximum allowed health points.")]
         [SerializeField] private int maxHealth = 3;
 
@@ -22,6 +24,10 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("If true, the player's currentHealth will be allowed to exceed maxHealth.")]
         [SerializeField] private bool allowOverhealing = false;
 
+        [Tooltip("Time in seconds that the player will be invincible after taking damage.")]
+        [SerializeField] private float invincibilityTime = 0.1f;
+
+        [Header("UI")]
         [Tooltip("Pick whether you want to use a continuous health bar image, or discrete health segments on the UI.")]
         [SerializeField] private HealthType healthType = HealthType.HealthBar;
 
@@ -31,22 +37,19 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Add an image for each health segment if the segmented health type is selected. Make sure the number of items in the array matches the value of maxHealth.")]
         [SerializeField] private Image[] healthSegments;
 
+        [Header("Respawning")]
         [Tooltip("Drag in a transform tagged \"Respawn\". If left null, this script will try to find a respawn tag in the scene.")]
         [SerializeField] private Transform respawnPoint;
 
         [Tooltip("Number of seconds after health reaches 0 before the player respawns.")]
         [SerializeField] private float delayBeforeRespawn = 0f;
 
-        [Tooltip("Optional: Sound effect for when the player has been damaged.")]
-        [SerializeField] private AudioClip damagedSound;
-
-        [Tooltip("Optional: Sound effect for when the player has died.")]
-        [SerializeField] private AudioClip deathSound;
-
         [Space(20)]
         [SerializeField] private UnityEvent onPlayerDamaged, onPlayerHealed, onPlayerDeath, onPlayerRespawn;
 
         private bool isDying = false;
+        private bool isInvincible = false;
+        private Coroutine invincibilityCoroutine;
 
         public enum HealthType
         {
@@ -72,7 +75,7 @@ namespace DigitalWorlds.StarterPackage2D
                 }
             }
 
-            UpdateHealth();
+            UpdateHealthUI();
 
             // Try to find a respawn point if it hasn't been assigned
             if (respawnPoint == null)
@@ -91,7 +94,7 @@ namespace DigitalWorlds.StarterPackage2D
         }
 
         // Updates the health display on the UI
-        private void UpdateHealth()
+        private void UpdateHealthUI()
         {
             if (healthType == HealthType.HealthBar)
             {
@@ -152,12 +155,14 @@ namespace DigitalWorlds.StarterPackage2D
                 Die();
             }
 
-            UpdateHealth();
+            UpdateHealthUI();
         }
 
         private void Die()
         {
             onPlayerDeath.Invoke();
+
+            StopInvincibility();
 
             if (delayBeforeRespawn > 0)
             {
@@ -178,7 +183,15 @@ namespace DigitalWorlds.StarterPackage2D
             transform.position = respawnPoint.position;
 
             // Restore the player's health to the maximum
-            SetHealth(maxHealth);
+            int previousHealth = currentHealth;
+            currentHealth = maxHealth;
+
+            if (previousHealth != currentHealth)
+            {
+                UpdateHealthUI();
+            }
+
+            StopInvincibility();
 
             onPlayerRespawn.Invoke();
         }
@@ -191,6 +204,79 @@ namespace DigitalWorlds.StarterPackage2D
             }
         }
 
+        public void DealDamage(int amount)
+        {
+            TakeDamage(amount, true);
+        }
+
+        private void TakeDamage(int amount, bool bypassInvincibility = false)
+        {
+            if (amount <= 0 || isDying)
+            {
+                return;
+            }
+
+            // Ignore damage when invincible unless explicitly bypassed
+            if (!bypassInvincibility && isInvincible)
+            {
+                return;
+            }
+
+            // Apply damage
+            int newHealth = Mathf.Max(0, currentHealth - amount);
+            SetHealth(newHealth);
+
+            // If we died, no need to start invincibility frames
+            if (currentHealth == 0)
+            {
+                return;
+            }
+
+            // Start invincibility only when the player actually took damage
+            StartInvincibility();
+        }
+
+        private void StartInvincibility()
+        {
+            if (invincibilityTime <= 0f)
+            {
+                return;
+            }
+
+            if (invincibilityCoroutine != null)
+            {
+                StopCoroutine(invincibilityCoroutine);
+            }
+
+            invincibilityCoroutine = StartCoroutine(InvincibilityCoroutine());
+        }
+
+        private IEnumerator InvincibilityCoroutine()
+        {
+            isInvincible = true;
+            float t = 0f;
+
+            while (t < invincibilityTime)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
+
+            isInvincible = false;
+            invincibilityCoroutine = null;
+        }
+
+        private void StopInvincibility()
+        {
+            if (invincibilityCoroutine != null)
+            {
+                StopCoroutine(invincibilityCoroutine);
+                invincibilityCoroutine = null;
+            }
+
+            isInvincible = false;
+        }
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.TryGetComponent(out Damager damager) && damager.enabled)
@@ -198,13 +284,19 @@ namespace DigitalWorlds.StarterPackage2D
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Enemy || alignment == Alignment.Environment)
                 {
+                    if (damager.instakill)
+                    {
+                        SetHealth(0);
+                        return;
+                    }
+
                     if (damager.healInstead)
                     {
-                        SetHealth(currentHealth + damager.damage);
+                        Heal(damager.damage);
                     }
                     else
                     {
-                        SetHealth(currentHealth - damager.damage);
+                        TakeDamage(damager.damage);
                     }
 
                     return;
@@ -213,7 +305,7 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (collision.CompareTag("Enemy"))
             {
-                SetHealth(currentHealth - 1);
+                TakeDamage(1);
             }
             else if (collision.CompareTag("Death"))
             {
@@ -221,7 +313,7 @@ namespace DigitalWorlds.StarterPackage2D
             }
             else if (collision.CompareTag("Health"))
             {
-                SetHealth(currentHealth + 1);
+                Heal(1);
             }
         }
 
@@ -232,13 +324,19 @@ namespace DigitalWorlds.StarterPackage2D
                 Alignment alignment = damager.alignment;
                 if (alignment == Alignment.Enemy || alignment == Alignment.Environment)
                 {
+                    if (damager.instakill)
+                    {
+                        SetHealth(0);
+                        return;
+                    }
+
                     if (damager.healInstead)
                     {
-                        SetHealth(currentHealth + damager.damage);
+                        Heal(damager.damage);
                     }
                     else
                     {
-                        SetHealth(currentHealth - damager.damage);
+                        TakeDamage(damager.damage);
                     }
 
                     return;
@@ -247,7 +345,7 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (collision.collider.CompareTag("Enemy"))
             {
-                SetHealth(currentHealth - 1);
+                TakeDamage(1);
             }
             else if (collision.collider.CompareTag("Death"))
             {
@@ -255,17 +353,20 @@ namespace DigitalWorlds.StarterPackage2D
             }
             else if (collision.collider.CompareTag("Health"))
             {
-                SetHealth(currentHealth + 1);
+                Heal(1);
             }
         }
 
         private void OnValidate()
         {
-            // Make sure the maxHealth can't be less than 1
-            if (maxHealth < 1)
-            {
-                maxHealth = 1;
-            }
+            // Make sure maxHealth can't be less than 1
+            maxHealth = Mathf.Max(1, maxHealth);
+
+            // Make sure delayBeforeRespawn can't be negative
+            delayBeforeRespawn = Mathf.Max(0, delayBeforeRespawn);
+
+            // Make sure invincibilityTime can't be negative
+            invincibilityTime = Mathf.Max(0, invincibilityTime);
 
             // Make sure currentHealth can't be less than 1 or greater than maxHealth (if allowOverhealing is false)
             if (currentHealth < 1)
@@ -275,12 +376,6 @@ namespace DigitalWorlds.StarterPackage2D
             else if (currentHealth > maxHealth && !allowOverhealing)
             {
                 currentHealth = maxHealth;
-            }
-
-            // Make sure delayBeforeRespawn can't be negative
-            if (delayBeforeRespawn < 0)
-            {
-                delayBeforeRespawn = 0;
             }
         }
     }
