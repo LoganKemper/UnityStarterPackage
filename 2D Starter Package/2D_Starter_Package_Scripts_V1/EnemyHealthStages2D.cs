@@ -13,6 +13,19 @@ namespace DigitalWorlds.StarterPackage2D
     [RequireComponent(typeof(EnemyHealth2D))]
     public class EnemyHealthStages2D : MonoBehaviour
     {
+        [System.Serializable]
+        public class HealthStage
+        {
+            [Tooltip("Enter the health value at which the stage will be activated.")]
+            public int healthThreshold;
+
+            [Tooltip("Enable to prevent the health stage from being activated multiple times.")]
+            public bool singleUse = true;
+
+            [System.NonSerialized] public bool stageUsed = false;
+            public UnityEvent onStageReached;
+        }
+
         [SerializeField] private HealthStage[] healthStages;
 
         private EnemyHealth2D enemyHealth;
@@ -45,19 +58,6 @@ namespace DigitalWorlds.StarterPackage2D
                     }
                 }
             }
-        }
-
-        [System.Serializable]
-        public class HealthStage
-        {
-            [Tooltip("Enter the health value at which the stage will be activated.")]
-            public int healthThreshold;
-
-            [Tooltip("Enable to prevent the health stage from being activated multiple times.")]
-            public bool singleUse = true;
-
-            [System.NonSerialized] public bool stageUsed = false;
-            public UnityEvent onStageReached;
         }
     }
 }

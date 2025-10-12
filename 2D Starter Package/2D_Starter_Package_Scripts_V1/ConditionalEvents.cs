@@ -12,6 +12,24 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class ConditionalEvents : MonoBehaviour
     {
+        [System.Serializable]
+        public class CounterCondition
+        {
+            [Tooltip("Enter the value that will be evaluated.")]
+            public int targetCount;
+
+            [Tooltip("Choose the condition that will be used to evaluate the target count.")]
+            public Condition condition = Condition.EqualTo;
+
+            [Tooltip("Enable to prevent the condition from being activated multiple times.")]
+            public bool singleUse = true;
+
+            [System.NonSerialized] public bool conditionUsed = false;
+
+            [Space(20)]
+            public UnityEvent onConditionMet;
+        }
+
         [Tooltip("The current value of the counter.")]
         [SerializeField] private int count;
 
@@ -136,22 +154,5 @@ namespace DigitalWorlds.StarterPackage2D
         private void Debug_ResetSingleUse() => ResetSingleUseFlags();
         #endregion
 
-        [System.Serializable]
-        public class CounterCondition
-        {
-            [Tooltip("Enter the value that will be evaluated.")]
-            public int targetCount;
-
-            [Tooltip("Choose the condition that will be used to evaluate the target count.")]
-            public Condition condition = Condition.EqualTo;
-
-            [Tooltip("Enable to prevent the condition from being activated multiple times.")]
-            public bool singleUse = true;
-
-            [System.NonSerialized] public bool conditionUsed = false;
-
-            [Space(20)]
-            public UnityEvent onConditionMet;
-        }
     }
 }

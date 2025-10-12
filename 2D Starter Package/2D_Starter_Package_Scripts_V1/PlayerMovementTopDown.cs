@@ -12,6 +12,25 @@ namespace DigitalWorlds.StarterPackage2D
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMovementTopDown : PlayerMovementBase
     {
+        [System.Serializable]
+        public class AnimationParameters
+        {
+            [Tooltip("Bool parameter: " + nameof(IsRunning))]
+            public string IsRunning = "IsRunning";
+
+            [Tooltip("Float parameter: " + nameof(InputX))]
+            public string InputX = "InputX";
+
+            [Tooltip("Float parameter: " + nameof(InputY))]
+            public string InputY = "InputY";
+
+            [Tooltip("Float parameter: " + nameof(LastInputX))]
+            public string LastInputX = "LastInputX";
+
+            [Tooltip("Float parameter: " + nameof(LastInputY))]
+            public string LastInputY = "LastInputY";
+        }
+
         [Header("Animation Settings")]
         [Tooltip("Drag in the player's animator to play running and idle animations.")]
         [SerializeField] private Animator animator;
@@ -177,25 +196,6 @@ namespace DigitalWorlds.StarterPackage2D
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                 facingTransform.localRotation = Quaternion.Euler(0f, 0f, angle);
             }
-        }
-
-        [System.Serializable]
-        public class AnimationParameters
-        {
-            [Tooltip("Bool parameter: " + nameof(IsRunning))]
-            public string IsRunning = "IsRunning";
-
-            [Tooltip("Float parameter: " + nameof(InputX))]
-            public string InputX = "InputX";
-
-            [Tooltip("Float parameter: " + nameof(InputY))]
-            public string InputY = "InputY";
-
-            [Tooltip("Float parameter: " + nameof(LastInputX))]
-            public string LastInputX = "LastInputX";
-
-            [Tooltip("Float parameter: " + nameof(LastInputY))]
-            public string LastInputY = "LastInputY";
         }
     }
 }

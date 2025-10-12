@@ -12,6 +12,19 @@ namespace DigitalWorlds.StarterPackage2D
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMovement2D : PlayerMovementBase
     {
+        [System.Serializable]
+        public class AnimationParameters
+        {
+            [Tooltip("Bool parameter: " + nameof(IsRunning))]
+            public string IsRunning = "IsRunning";
+
+            [Tooltip("Trigger parameter: " + nameof(Jump))]
+            public string Jump = "Jump";
+
+            [Tooltip("(Only used by PlayerMovementAdvanced)\nBool parameter: " + nameof(IsDashing))]
+            public string IsDashing = "IsDashing";
+        }
+
         [Header("Animation Settings")]
         [Tooltip("Drag in the player's animator to play animations for running and jumping.")]
         [SerializeField] protected Animator animator;
@@ -238,19 +251,6 @@ namespace DigitalWorlds.StarterPackage2D
             {
                 facingTransform.rotation *= Quaternion.Euler(0f, 180f, 0f);
             }
-        }
-
-        [System.Serializable]
-        public class AnimationParameters
-        {
-            [Tooltip("Bool parameter: " + nameof(IsRunning))]
-            public string IsRunning = "IsRunning";
-
-            [Tooltip("Trigger parameter: " + nameof(Jump))]
-            public string Jump = "Jump";
-
-            [Tooltip("(Only used by PlayerMovementAdvanced)\nBool parameter: " + nameof(IsDashing))]
-            public string IsDashing = "IsDashing";
         }
     }
 }

@@ -14,6 +14,16 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class EnemyHealth2D : MonoBehaviour
     {
+        [System.Serializable]
+        public class AnimationParameters
+        {
+            [Tooltip("Trigger parameter: " + nameof(Hit))]
+            public string Hit = "Hit";
+
+            [Tooltip("Trigger parameter: " + nameof(Death))]
+            public string Death = "Death";
+        }
+
         [Tooltip("How many times the enemy can get hit before being destroyed.")]
         [SerializeField] private int health = 3;
 
@@ -50,10 +60,10 @@ namespace DigitalWorlds.StarterPackage2D
 
         public event System.Action<int, int> OnEnemyHealthChanged;
 
+        private Coroutine invincibilityCoroutine;
         private int maxHealth;
         private bool isDying = false;
         private bool isInvincible = false;
-        private Coroutine invincibilityRoutine;
 
         private void Start()
         {
@@ -253,12 +263,12 @@ namespace DigitalWorlds.StarterPackage2D
                 return;
             }
 
-            if (invincibilityRoutine != null)
+            if (invincibilityCoroutine != null)
             {
-                StopCoroutine(invincibilityRoutine);
+                StopCoroutine(invincibilityCoroutine);
             }
 
-            invincibilityRoutine = StartCoroutine(InvincibilityCoroutine());
+            invincibilityCoroutine = StartCoroutine(InvincibilityCoroutine());
         }
 
         private IEnumerator InvincibilityCoroutine()
@@ -273,15 +283,15 @@ namespace DigitalWorlds.StarterPackage2D
             }
 
             isInvincible = false;
-            invincibilityRoutine = null;
+            invincibilityCoroutine = null;
         }
 
         private void StopInvincibility()
         {
-            if (invincibilityRoutine != null)
+            if (invincibilityCoroutine != null)
             {
-                StopCoroutine(invincibilityRoutine);
-                invincibilityRoutine = null;
+                StopCoroutine(invincibilityCoroutine);
+                invincibilityCoroutine = null;
             }
 
             isInvincible = false;
@@ -293,16 +303,6 @@ namespace DigitalWorlds.StarterPackage2D
             invincibilityTime = Mathf.Max(0f, invincibilityTime);
             delayBeforeDying = Mathf.Max(0f, delayBeforeDying);
             health = Mathf.Max(1, health);
-        }
-
-        [System.Serializable]
-        public class AnimationParameters
-        {
-            [Tooltip("Trigger parameter: " + nameof(Hit))]
-            public string Hit = "Hit";
-
-            [Tooltip("Trigger parameter: " + nameof(Death))]
-            public string Death = "Death";
         }
     }
 }

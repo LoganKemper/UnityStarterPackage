@@ -14,6 +14,12 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PlayerHealth2D : MonoBehaviour
     {
+        public enum HealthType
+        {
+            HealthBar,
+            Segmented
+        }
+
         [Header("Health Settings")]
         [Tooltip("The player's maximum allowed health points.")]
         [SerializeField] private int maxHealth = 3;
@@ -47,15 +53,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Space(20)]
         [SerializeField] private UnityEvent onPlayerDamaged, onPlayerHealed, onPlayerDeath, onPlayerRespawn;
 
+        private Coroutine invincibilityCoroutine;
         private bool isDying = false;
         private bool isInvincible = false;
-        private Coroutine invincibilityCoroutine;
-
-        public enum HealthType
-        {
-            HealthBar,
-            Segmented
-        }
 
         private void Start()
         {
