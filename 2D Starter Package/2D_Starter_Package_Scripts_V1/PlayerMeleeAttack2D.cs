@@ -13,6 +13,9 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PlayerMeleeAttack2D : MonoBehaviour
     {
+        [Tooltip("The button input used for the melee attack. Set to right click (Mouse1) by default.")]
+        [SerializeField] private KeyCode buttonInput = KeyCode.Mouse1;
+
         [Tooltip("Drag in the hitbox GameObject with a trigger collider on it here.")]
         [SerializeField] private Collider2D hitbox;
 
@@ -31,9 +34,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Space(20)]
         [SerializeField] private UnityEvent onMeleeStart, onMeleeEnd;
 
+        private Coroutine meleeCoroutine;
         private bool canMelee = true;
         private float cooldownTimer = 0;
-        private Coroutine meleeCoroutine;
 
         // Call from a UnityEvent to enable or disable the attack
         public void EnableMeleeAttack(bool enableAttack)
@@ -49,8 +52,7 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void Update()
         {
-            // Fire2 is the right mouse button by default
-            if (Input.GetButtonDown("Fire2") && canMelee && cooldownTimer <= 0.01f)
+            if (Input.GetKeyDown(buttonInput) && canMelee && cooldownTimer <= 0.01f)
             {
                 if (meleeCoroutine != null)
                 {

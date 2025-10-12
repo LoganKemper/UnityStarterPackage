@@ -12,6 +12,9 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PlayerProjectileAttack2D : MonoBehaviour
     {
+        [Tooltip("The button input used for the projectile attack. Set to left click (Mouse0) by default.")]
+        [SerializeField] private KeyCode buttonInput = KeyCode.Mouse0;
+
         [Tooltip("Drag the projectile prefab in here. The projectile GameObject must have the Projectile2D component on it.")]
         [SerializeField] private Projectile2D projectile;
 
@@ -100,8 +103,7 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void Update()
         {
-            // "Fire1" is the left mouse button by default
-            if (Input.GetButtonDown("Fire1") && canShoot)
+            if (Input.GetKeyDown(buttonInput) && canShoot)
             {
                 if (!requireAmmo || ammo > 0)
                 {
