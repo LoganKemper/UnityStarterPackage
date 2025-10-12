@@ -66,6 +66,11 @@ namespace DigitalWorlds.StarterPackage2D
                 return;
             }
 
+            if (collectableDisplays == null)
+            {
+                return;
+            }
+
             foreach (var collectable in collectableDisplays)
             {
                 if (collectable.persistentCollectable && persistentValues.TryGetValue(collectable.collectableName, out int savedValue))
