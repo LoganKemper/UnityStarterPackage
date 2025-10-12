@@ -14,7 +14,7 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Drag in the main camera. If left empty, the script will try to find the main camera in the scene.")]
         [SerializeField] private Transform mainCamera;
 
-        [Tooltip("Drag in the SpriteRenderer.")]
+        [Tooltip("Drag in the main SpriteRenderer. The sprite's width value is used when looping the parallaxing objects.")]
         [SerializeField] private SpriteRenderer spriteRenderer;
 
         [Tooltip("The higher the strength, the more this GameObject will move with the camera. Use values between 0 and 1 for objects in the background, and values above 1 for objects in the foreground.")]
@@ -46,6 +46,12 @@ namespace DigitalWorlds.StarterPackage2D
             if (mainCamera == null)
             {
                 mainCamera = Camera.main.transform;
+            }
+
+            if (spriteRenderer == null)
+            {
+                Debug.LogError("Parallax SpriteRenderer not assigned");
+                return;
             }
 
             // Get the sprite's height and width
@@ -110,10 +116,7 @@ namespace DigitalWorlds.StarterPackage2D
         private void OnValidate()
         {
             // Prevent a negative parallaxStrength from being set in the inspector
-            if (parallaxStrength < 0)
-            {
-                parallaxStrength = 0;
-            }
+            parallaxStrength = Mathf.Max(0f, parallaxStrength);
         }
     }
 }
