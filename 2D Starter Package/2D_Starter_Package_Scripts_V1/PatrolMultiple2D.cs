@@ -13,6 +13,32 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PatrolMultiple2D : MonoBehaviour
     {
+        [System.Serializable]
+        public class AnimationParameters
+        {
+            [Tooltip("Bool parameter: " + nameof(IsRunning))]
+            public string IsRunning = "IsRunning";
+
+            [Tooltip("Float parameter: " + nameof(InputX))]
+            public string InputX = "InputX";
+
+            [Tooltip("Float parameter: " + nameof(InputY))]
+            public string InputY = "InputY";
+
+            [Tooltip("Float parameter: " + nameof(LastInputX))]
+            public string LastInputX = "LastInputX";
+
+            [Tooltip("Float parameter: " + nameof(LastInputY))]
+            public string LastInputY = "LastInputY";
+        }
+
+        public enum PatrolType
+        {
+            Loop,
+            PingPong,
+            Neither
+        }
+
         [Header("Patrol System")]
         [Tooltip("The patrolling GameObject will move to each waypoint in order.")]
         [SerializeField] protected List<Transform> waypoints = new();
@@ -29,31 +55,37 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("How close this GameObject needs to be to the current waypoint in order to move to the next one. May need to be adjusted depending on the scale of your game.")]
         [SerializeField] protected float distanceThreshold = 0.05f;
 
-        [Tooltip("If true, this GameObject will flip its scale on the x-axis to face the next waypoint.")]
+        [Tooltip("If true, this GameObject will flip its scale on the x-axis to face the next waypoint. Best used in side-scrollers without a blend tree.")]
         [SerializeField] protected bool flipToFaceNextWaypoint = true;
 
+        [Header("Animation")]
+        [Tooltip("Optional: Drag in an animator with two blend trees (idle and running). " +
+            "Idle uses " + nameof(AnimationParameters.LastInputX) + "/" + nameof(AnimationParameters.LastInputY) + 
+            ", running uses " + nameof(AnimationParameters.InputX) + "/" + nameof(AnimationParameters.InputY) + ". " +
+            nameof(AnimationParameters.IsRunning) + " switches between them.")]
+        [SerializeField] private Animator animator;
+        [SerializeField] private AnimationParameters animationParameters;
+
+        protected const float MAGNITUDE_THRESHOLD = 0.0001f;
+
+        private Coroutine patrolCoroutine;
         private bool doPatrol = true;
         private int currentIndex = 0;
         private int direction = 1;
         private int currentFacingDirection;
-        private Coroutine patrolCoroutine;
-
-        public enum PatrolType
-        {
-            Loop,
-            PingPong,
-            Neither,
-        }
 
         // Can be called from other scripts or UnityEvents to stop patrolling
         public void StopPatrolling()
         {
             doPatrol = false;
+
             if (patrolCoroutine != null)
             {
                 StopCoroutine(patrolCoroutine);
                 patrolCoroutine = null;
             }
+
+            UpdateAnimator(Vector2.zero, false);
         }
 
         // Can be called from other scripts or UnityEvents to start or resume patrolling
@@ -96,11 +128,20 @@ namespace DigitalWorlds.StarterPackage2D
                     FlipIfNeeded(target);
                 }
 
-                while (Vector2.Distance(transform.position, target.position) > distanceThreshold)
+                while (Vector2.Distance(transform.position, target.position) > distanceThreshold && doPatrol)
                 {
+                    // Update animator to face the target
+                    Vector2 toTarget = (target.position - transform.position);
+                    Vector2 direction = toTarget.sqrMagnitude > MAGNITUDE_THRESHOLD ? toTarget.normalized : Vector2.zero;
+                    UpdateAnimator(direction, true);
+
+                    // Move
                     transform.position = Vector2.MoveTowards(transform.position, target.position, patrolSpeed * Time.deltaTime);
+                    
                     yield return null;
                 }
+
+                UpdateAnimator(Vector2.zero, false);
 
                 // Optionally pause movement at each waypoint
                 if (pauseAtWaypoint > 0f)
@@ -128,10 +169,13 @@ namespace DigitalWorlds.StarterPackage2D
                 {
                     if (currentIndex >= waypoints.Count)
                     {
+                        UpdateAnimator(Vector2.zero, false);
                         yield break;
                     }
                 }
             }
+
+            UpdateAnimator(Vector2.zero, false);
         }
 
         protected void FlipIfNeeded(Transform target)
@@ -146,6 +190,26 @@ namespace DigitalWorlds.StarterPackage2D
                 scale.x = Mathf.Abs(scale.x) * newFacingDirection;
                 transform.localScale = scale;
                 currentFacingDirection = newFacingDirection;
+            }
+        }
+
+        protected void UpdateAnimator(Vector2 inputDirection, bool isRunning)
+        {
+            if (animator == null)
+            {
+                return;
+            }
+
+            // Update input animation parameters
+            animator.SetBool(animationParameters.IsRunning, isRunning);
+            animator.SetFloat(animationParameters.InputX, inputDirection.x);
+            animator.SetFloat(animationParameters.InputY, inputDirection.y);
+
+            // Update last input parameters if currently moving
+            if (isRunning && inputDirection.sqrMagnitude > MAGNITUDE_THRESHOLD)
+            {
+                animator.SetFloat(animationParameters.LastInputX, inputDirection.x);
+                animator.SetFloat(animationParameters.LastInputY, inputDirection.y);
             }
         }
 

@@ -13,6 +13,23 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PatrolChase2D : PatrolMultiple2D
     {
+        [System.Serializable]
+        public class PatrolEvents
+        {
+            [Space(20)]
+            public UnityEvent onChasePlayer;
+
+            [Space(20)]
+            public UnityEvent onPatrol;
+        }
+
+        public enum ChaseMode
+        {
+            Direct,
+            HorizontalOnly,
+            VerticalOnly
+        }
+
         [Header("Chase")]
         [Tooltip("Drag in the player GameObject. If the player has the PlayerStealth2D component on it, PatrolChase2D will check if the player is in cover before chasing them.")]
         [SerializeField] private Transform playerTransform;
@@ -34,13 +51,6 @@ namespace DigitalWorlds.StarterPackage2D
 
         [Header("Patrol Events")]
         [SerializeField] private PatrolEvents patrolEvents;
-
-        public enum ChaseMode
-        {
-            Direct,
-            HorizontalOnly,
-            VerticalOnly
-        }
 
         // This "buffer" is used to prevent rapid switching between chasing and idle states
         private const float DISTANCE_BUFFER = 1.2f;
@@ -113,6 +123,7 @@ namespace DigitalWorlds.StarterPackage2D
                     patrolEvents.onPatrol.Invoke();
                 }
 
+                UpdateAnimator(Vector2.zero, false);
                 returnToPatrolCoroutine = StartCoroutine(WaitThenReturnToPatrol());
             }
         }
@@ -132,6 +143,7 @@ namespace DigitalWorlds.StarterPackage2D
             Vector2 targetPosition = playerTransform.position;
             Vector2 moveTarget = targetPosition;
 
+            // Apply chase mode
             switch (chaseMode)
             {
                 case ChaseMode.HorizontalOnly:
@@ -145,6 +157,15 @@ namespace DigitalWorlds.StarterPackage2D
                     break;
             }
 
+            // Update animator with direction
+            Vector2 direction = (moveTarget - currentPosition);
+            if (direction.sqrMagnitude > MAGNITUDE_THRESHOLD)
+            {
+                direction.Normalize();
+            }
+            UpdateAnimator(direction, true);
+
+            // Move
             transform.position = Vector2.MoveTowards(currentPosition, moveTarget, chaseSpeed * Time.deltaTime);
         }
 
@@ -156,7 +177,14 @@ namespace DigitalWorlds.StarterPackage2D
 
         private IEnumerator WaitThenReturnToPatrol()
         {
-            yield return new WaitForSeconds(pauseBeforePatrolling);
+            float end = Time.time + pauseBeforePatrolling;
+            while (Time.time < end)
+            {
+                // Stay idle while waiting to resume patrol
+                UpdateAnimator(Vector2.zero, false);
+                yield return null;
+            }
+
             StartPatrolling();
             returnToPatrolCoroutine = null;
         }
@@ -168,16 +196,6 @@ namespace DigitalWorlds.StarterPackage2D
             detectionRange = Mathf.Max(0, detectionRange);
             stoppingThreshold = Mathf.Max(0, stoppingThreshold);
             pauseBeforePatrolling = Mathf.Max(0, pauseBeforePatrolling);
-        }
-
-        [System.Serializable]
-        public class PatrolEvents
-        {
-            [Space(20)]
-            public UnityEvent onChasePlayer;
-
-            [Space(20)]
-            public UnityEvent onPatrol;
         }
     }
 }
