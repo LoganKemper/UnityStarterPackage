@@ -2,6 +2,7 @@
 // University of Florida's Digital Worlds Institute
 // Written by Logan Kemper
 
+using System.Collections;
 using UnityEngine;
 
 namespace DigitalWorlds.StarterPackage2D
@@ -33,6 +34,30 @@ namespace DigitalWorlds.StarterPackage2D
         public void DestroyTargetComponent(Component target)
         {
             Destroy(target);
+        }
+
+        // Destroys this GameObject after one physics update
+        public void DestroyAfterPhysics()
+        {
+            StartCoroutine(DestroyAfterPhysicsCoroutine());
+        }
+
+        private IEnumerator DestroyAfterPhysicsCoroutine()
+        {
+            yield return new WaitForFixedUpdate();
+            Destroy(gameObject);
+        }
+
+        // Destroys this GameObject during the next frame of the game
+        public void DestroyNextFrame()
+        {
+            StartCoroutine(DestroyNextFrameCoroutine());
+        }
+
+        private IEnumerator DestroyNextFrameCoroutine()
+        {
+            yield return null;
+            Destroy(gameObject);
         }
     }
 }
