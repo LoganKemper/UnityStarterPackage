@@ -12,17 +12,23 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class Lock2D : MonoBehaviour
     {
+        [System.Serializable]
+        public class RequiredItem
+        {
+            [Tooltip("The name of the item that the lock requires.")]
+            public string itemName = "Key";
+
+            [Tooltip("The quantity of the item required.")]
+            public int itemCount = 1;
+        }
+
         [Tooltip("Enter the tag name that should register collisions.")]
         [SerializeField] private string tagName;
 
         [Tooltip("Choose whether to check for the required item in the player's inventory or in the collectable manager.")]
         [SerializeField] private KeyLocation keyLocation = KeyLocation.Inventory;
 
-        [Tooltip("The name of the item that the lock requires.")]
-        [SerializeField] private string requiredItemName;
-
-        [Tooltip("The quantity of the item required.")]
-        [SerializeField] private int requiredItemCount;
+        [SerializeField] private RequiredItem[] requiredItems;
 
         [Tooltip("Whether a button press should be required to unlock the lock. If false, it will check automatically on the trigger collision.")]
         [SerializeField] private bool requireButtonPress;
@@ -82,38 +88,104 @@ namespace DigitalWorlds.StarterPackage2D
         // Check if the required items are in the inventory, then handle the unlocking
         private void CheckUnlock()
         {
+            // Treat no requirements as success
+            if (requiredItems == null || requiredItems.Length == 0)
+            {
+                onUnlocked.Invoke();
+                return;
+            }
+
+            // Check the player's inventory
             if (keyLocation == KeyLocation.Inventory)
             {
-                int count = inventory.GetItemCount(requiredItemName);
-                if (count >= requiredItemCount)
+                if (inventory == null)
                 {
-                    if (deleteItemsWhenUsed)
-                    {
-                        inventory.DeleteItemFromInventory(requiredItemName, requiredItemCount);
-                    }
-
-                    onUnlocked.Invoke();
+                    onUnlockFailed.Invoke();
                     return;
                 }
-            }
-            else if (keyLocation == KeyLocation.CollectableManager)
-            {
-                if (CollectableManager.Instance != null)
-                {
-                    var collectable = CollectableManager.Instance.FindCollectable(requiredItemName);
-                    if (collectable != null && collectable.count >= requiredItemCount)
-                    {
-                        if (deleteItemsWhenUsed)
-                        {
-                            CollectableManager.Instance.AddCollectable(requiredItemName, -requiredItemCount);
-                        }
 
-                        onUnlocked.Invoke();
+                // Verify required items
+                for (int i = 0; i < requiredItems.Length; i++)
+                {
+                    RequiredItem requiredItem = requiredItems[i];
+                    int needed = Mathf.Max(0, requiredItem.itemCount);
+                    if (needed == 0)
+                    {
+                        continue;
+                    }
+
+                    int owned = inventory.GetItemCount(requiredItem.itemName);
+                    if (owned < needed)
+                    {
+                        onUnlockFailed.Invoke();
                         return;
                     }
                 }
+
+                if (deleteItemsWhenUsed)
+                {
+                    for (int i = 0; i < requiredItems.Length; i++)
+                    {
+                        RequiredItem requiredItem = requiredItems[i];
+                        int needed = Mathf.Max(0, requiredItem.itemCount);
+                        if (needed > 0)
+                        {
+                            inventory.DeleteItemFromInventory(requiredItem.itemName, needed);
+                        }
+                    }
+                }
+
+                onUnlocked.Invoke();
+                return;
             }
 
+            // Check the collectable manager
+            if (keyLocation == KeyLocation.CollectableManager)
+            {
+                CollectableManager collectableManager = CollectableManager.Instance;
+                if (collectableManager == null)
+                {
+                    onUnlockFailed.Invoke();
+                    return;
+                }
+
+                // Verify required items
+                for (int i = 0; i < requiredItems.Length; i++)
+                {
+                    RequiredItem requiredItem = requiredItems[i];
+                    int needed = Mathf.Max(0, requiredItem.itemCount);
+                    if (needed == 0)
+                    {
+                        continue;
+                    }
+
+                    var collectable = collectableManager.FindCollectable(requiredItem.itemName);
+                    int owned = (collectable != null) ? collectable.count : 0;
+                    if (owned < needed)
+                    {
+                        onUnlockFailed.Invoke();
+                        return;
+                    }
+                }
+
+                if (deleteItemsWhenUsed)
+                {
+                    for (int i = 0; i < requiredItems.Length; i++)
+                    {
+                        RequiredItem requiredItem = requiredItems[i];
+                        int needed = Mathf.Max(0, requiredItem.itemCount);
+                        if (needed > 0)
+                        {
+                            collectableManager.AddCollectable(requiredItem.itemName, -needed);
+                        }
+                    }
+                }
+
+                onUnlocked.Invoke();
+                return;
+            }
+
+            // Fallback
             onUnlockFailed.Invoke();
         }
     }
