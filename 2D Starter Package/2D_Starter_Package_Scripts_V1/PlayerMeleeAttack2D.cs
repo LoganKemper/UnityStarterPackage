@@ -13,23 +13,31 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PlayerMeleeAttack2D : MonoBehaviour
     {
+        [System.Serializable]
+        public class AnimationParameters
+        {
+            [Tooltip("Trigger parameter: " + nameof(Melee))]
+            public string Melee = "Melee";
+        }
+
+        [Header("Attack Settings")]
         [Tooltip("The button input used for the melee attack. Set to right click (Mouse1) by default.")]
         [SerializeField] private KeyCode buttonInput = KeyCode.Mouse1;
 
         [Tooltip("Drag in the hitbox GameObject with a trigger collider on it here.")]
         [SerializeField] private Collider2D hitbox;
 
-        [Tooltip("Optional: Drag the player's animator in here for a melee animation.")]
-        [SerializeField] private Animator animator;
-
-        [Tooltip("Optional: Sound effect when melee activates.")]
-        [SerializeField] private AudioClip meleeSound;
-
         [Tooltip("How long the hitbox activates for.")]
         [SerializeField] private float hitboxTime = 0.1f;
 
         [Tooltip("How long after an attack can another attack be executed.")]
         [SerializeField] private float cooldown = 0.25f;
+
+        [Header("Animation")]
+        [Tooltip("Optional: Drag the player's animator in here for a melee animation trigger.")]
+        [SerializeField] private Animator animator;
+
+        [SerializeField] private AnimationParameters animationParameters;
 
         [Space(20)]
         [SerializeField] private UnityEvent onMeleeStart, onMeleeEnd;
@@ -71,16 +79,10 @@ namespace DigitalWorlds.StarterPackage2D
 
         private IEnumerator MeleeCoroutine()
         {
-            // If the animator has been assigned, send it a "Melee" trigger
+            // If the animator has been assigned, send it a trigger
             if (animator != null)
             {
-                animator.SetTrigger("Melee");
-            }
-
-            // Play the melee sound if it has been assigned
-            if (meleeSound != null)
-            {
-                AudioSource.PlayClipAtPoint(meleeSound, transform.position);
+                animator.SetTrigger(animationParameters.Melee);
             }
 
             // Begin the attack
@@ -92,6 +94,7 @@ namespace DigitalWorlds.StarterPackage2D
             yield return new WaitForSeconds(hitboxTime);
             hitbox.enabled = false;
             onMeleeEnd.Invoke();
+            meleeCoroutine = null;
         }
     }
 }

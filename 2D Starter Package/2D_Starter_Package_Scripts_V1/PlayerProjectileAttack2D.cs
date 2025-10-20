@@ -12,6 +12,7 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PlayerProjectileAttack2D : MonoBehaviour
     {
+        [Header("Attack Settings")]
         [Tooltip("The button input used for the projectile attack. Set to left click (Mouse0) by default.")]
         [SerializeField] private KeyCode buttonInput = KeyCode.Mouse0;
 
@@ -45,14 +46,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("If set to MousePosition, the projectile will shoot towards the mouse cursor. Otherwise the projectile will shoot in the direction the player is facing.")]
         [SerializeField] private LaunchDirection launchDirection = LaunchDirection.FacingDirection;
 
-        [Tooltip("Optional: Sound effect for when the projectile is spawned.")]
-        [SerializeField] private AudioClip shootSound;
-
-        [Tooltip("Optional: Sound effect for when a projectile launch is attempted but there is no ammunition.")]
-        [SerializeField] private AudioClip noAmmoSound;
-
         [Space(20)]
-        [SerializeField] private UnityEvent onProjectileLaunched;
+        [SerializeField] private UnityEvent onProjectileLaunched, onNoAmmo;
+
         [Space(20)]
         [SerializeField] private UnityEvent<int> onAmmoChanged;
 
@@ -120,10 +116,7 @@ namespace DigitalWorlds.StarterPackage2D
                 }
                 else if (requireAmmo && ammo <= 0)
                 {
-                    if (noAmmoSound != null)
-                    {
-                        AudioSource.PlayClipAtPoint(noAmmoSound, transform.position);
-                    }
+                    onNoAmmo.Invoke();
                 }
             }
         }
@@ -160,11 +153,6 @@ namespace DigitalWorlds.StarterPackage2D
                 launchDirection = launchDirection.normalized;
 
                 newProjectile.Launch(launchDirection, velocity, player);
-            }
-
-            if (shootSound != null)
-            {
-                AudioSource.PlayClipAtPoint(shootSound, transform.position);
             }
 
             onProjectileLaunched.Invoke();
