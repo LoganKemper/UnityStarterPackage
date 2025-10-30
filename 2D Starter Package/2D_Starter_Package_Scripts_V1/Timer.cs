@@ -13,6 +13,12 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class Timer : MonoBehaviour
     {
+        private enum TimerDirection : byte
+        {
+            CountUp,
+            CountDown
+        }
+
         [Tooltip("How many seconds the timer lasts for.")]
         [SerializeField] private float timerSeconds = 5f;
 
@@ -25,10 +31,13 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("How many numbers after the decimal place on the timer text.")]
         [SerializeField] private int decimalPlaces = 2;
 
+        [Tooltip("Choose whether the timer should count up or down.")]
+        [SerializeField] private TimerDirection timerDirection = TimerDirection.CountDown;
+
         [Space(20)]
         [SerializeField] private UnityEvent onTimerFinished;
 
-        private float timer = 0f;
+        private float timer;
         private bool timerInProgress;
         private bool isPaused;
 
@@ -36,9 +45,18 @@ namespace DigitalWorlds.StarterPackage2D
         [ContextMenu("Start Timer")]
         public void StartTimer()
         {
-            timer = timerSeconds;
             timerInProgress = true;
             isPaused = false;
+
+            if (timerDirection == TimerDirection.CountDown)
+            {
+                timer = timerSeconds;
+            }
+            else if (timerDirection == TimerDirection.CountUp)
+            {
+                timer = 0f;
+            }
+
             UpdateTimerDisplay();
         }
 
@@ -48,7 +66,16 @@ namespace DigitalWorlds.StarterPackage2D
         {
             timerInProgress = false;
             isPaused = false;
-            timer = 0f;
+
+            if (timerDirection == TimerDirection.CountDown)
+            {
+                timer = 0f;
+            }
+            else if (timerDirection == TimerDirection.CountUp)
+            {
+                timer = timerSeconds;
+            }
+
             UpdateTimerDisplay();
         }
 
@@ -74,7 +101,12 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void Update()
         {
-            if (timerInProgress && !isPaused)
+            if (!timerInProgress || isPaused)
+            {
+                return;
+            }
+
+            if (timerDirection == TimerDirection.CountDown)
             {
                 timer -= Time.deltaTime;
 
@@ -86,9 +118,22 @@ namespace DigitalWorlds.StarterPackage2D
                     StopTimer();
                     return;
                 }
-
-                UpdateTimerDisplay();
             }
+            else if (timerDirection == TimerDirection.CountUp)
+            {
+                timer += Time.deltaTime;
+
+                if (timer >= timerSeconds)
+                {
+                    timer = timerSeconds;
+                    UpdateTimerDisplay();
+                    onTimerFinished.Invoke();
+                    StopTimer();
+                    return;
+                }
+            }
+
+            UpdateTimerDisplay();
         }
 
         public void UpdateTimerDisplay()
