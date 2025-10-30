@@ -241,7 +241,23 @@ namespace DigitalWorlds.StarterPackage2D
             }
         }
 
-        protected virtual void Turn()
+        public void TurnRight()
+        {
+            if (!isFacingRight)
+            {
+                Turn();
+            }
+        }
+
+        public void TurnLeft()
+        {
+            if (isFacingRight)
+            {
+                Turn();
+            }
+        }
+
+        public virtual void Turn()
         {
             // Flip the player's transform on the x-axis
             transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
