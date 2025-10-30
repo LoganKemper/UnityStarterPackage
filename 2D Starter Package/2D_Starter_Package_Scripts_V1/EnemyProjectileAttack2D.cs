@@ -12,6 +12,15 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class EnemyProjectileAttack2D : MonoBehaviour
     {
+        public enum ProjectileDirection : byte
+        {
+            AnyDirection,
+            HorizontalOnly,
+            VerticalOnly,
+            FourDirections,
+            EightDirections
+        }
+
         [Tooltip("Drag in the projectile prefab.")]
         [SerializeField] private Projectile2D projectile;
 
@@ -36,20 +45,14 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("The maximum distance from this GameObject to the player allowed for projectiles to launch.")]
         [SerializeField] private float maxDistanceFromPlayer = 100f;
 
+        [Tooltip("Choose which directions the projectile can be launched in.")]
         [SerializeField] private ProjectileDirection projectileDirection = ProjectileDirection.AnyDirection;
 
         [Space(20)]
         [SerializeField] private UnityEvent onProjectileLaunched;
 
-        public enum ProjectileDirection
-        {
-            AnyDirection,
-            HorizontalOnly,
-            VerticalOnly
-        }
-
         private float cooldown;
-        private int initialFacingDirection;
+        private int currentFacingDirection; // -1 = left, 1 = right
 
         // Call this from a UnityEvent to change the target that the projectiles are launched towards
         public void SetTarget(Transform newTarget)
@@ -67,8 +70,8 @@ namespace DigitalWorlds.StarterPackage2D
 
             cooldown = GetCooldown();
 
-            // Store the initial facing direction (1 = right, -1 = left)
-            initialFacingDirection = transform.localScale.x >= 0 ? 1 : -1;
+            // Store the initial facing direction
+            currentFacingDirection = transform.localScale.x >= 0 ? 1 : -1;
         }
 
         private void Update()
@@ -98,32 +101,43 @@ namespace DigitalWorlds.StarterPackage2D
                 return;
             }
 
-            Projectile2D newProjectile;
-            Vector2 direction;
-
             // Choose where to launch the projectile from
             Vector3 spawnPosition = launchTransform != null ? launchTransform.position : transform.position;
 
             // Find the normalized direction of the target
-            direction = (playerTransform.position - spawnPosition).normalized;
+            Vector2 direction = (playerTransform.position - spawnPosition).normalized;
 
             if (flipToFacePlayer)
             {
                 FlipToFacePlayer();
             }
 
-            // Optionally clamp the projectile horizontally or vertically
-            if (projectileDirection == ProjectileDirection.HorizontalOnly)
+            // Projectile direction clamp modes
+            switch (projectileDirection)
             {
-                direction = new Vector2(direction.x, 0f).normalized;
-            }
-            else if (projectileDirection == ProjectileDirection.VerticalOnly)
-            {
-                direction = new Vector2(0f, direction.y).normalized;
+                case ProjectileDirection.HorizontalOnly:
+                    direction = new Vector2(direction.x, 0f).normalized;
+                    break;
+
+                case ProjectileDirection.VerticalOnly:
+                    direction = new Vector2(0f, direction.y).normalized;
+                    break;
+
+                case ProjectileDirection.FourDirections:
+                    direction = SnapToDirectionSet(direction, FOUR_DIRECTIONS_SET);
+                    break;
+
+                case ProjectileDirection.EightDirections:
+                    direction = SnapToDirectionSet(direction, EIGHT_DIRECTIONS_SET);
+                    break;
+
+                case ProjectileDirection.AnyDirection:
+                default:
+                    break;
             }
 
             // Spawn the new projectile and launch it
-            newProjectile = Instantiate(projectile, spawnPosition, Quaternion.identity);
+            Projectile2D newProjectile = Instantiate(projectile, spawnPosition, Quaternion.identity);
             newProjectile.Launch(direction, velocity, gameObject);
 
             onProjectileLaunched.Invoke();
@@ -135,11 +149,12 @@ namespace DigitalWorlds.StarterPackage2D
             int newFacingDirection = playerDirection >= 0 ? 1 : -1;
 
             // Only flip if the direction is different from the current facing direction
-            if (newFacingDirection != initialFacingDirection)
+            if (newFacingDirection != currentFacingDirection)
             {
                 Vector3 scale = transform.localScale;
                 scale.x = Mathf.Abs(scale.x) * newFacingDirection;
                 transform.localScale = scale;
+                currentFacingDirection = newFacingDirection;
             }
         }
 
@@ -148,6 +163,54 @@ namespace DigitalWorlds.StarterPackage2D
         {
             return fireRateVariation != 0f ? fireRate + Random.Range(-fireRateVariation, fireRateVariation) : fireRate;
         }
+
+        private Vector2 SnapToDirectionSet(Vector2 vector, Vector2[] directionsSet)
+        {
+            if (vector.sqrMagnitude <= Mathf.Epsilon)
+            {
+                // Default to first if vector is zero
+                return directionsSet[0];
+            }
+
+            vector.Normalize();
+            float bestDot = float.NegativeInfinity;
+            Vector2 bestVector = directionsSet[0];
+
+            // Iterate through the set of vectors to find the best match
+            for (int i = 0; i < directionsSet.Length; i++)
+            {
+                // Dot product finds the angle between two vectors
+                float dotProduct = Vector2.Dot(vector, directionsSet[i]);
+                if (dotProduct > bestDot)
+                {
+                    bestDot = dotProduct;
+                    bestVector = directionsSet[i];
+                }
+            }
+            return bestVector;
+        }
+
+        private static readonly Vector2[] FOUR_DIRECTIONS_SET =
+        {
+            new( 1f,  0f), // East
+            new( 0f,  1f), // North
+            new(-1f,  0f), // West
+            new( 0f, -1f), // South
+        };
+
+        private static readonly float INVERTED_SQRT_OF_2 = 1 / Mathf.Sqrt(2);
+
+        private static readonly Vector2[] EIGHT_DIRECTIONS_SET =
+        {
+            new( 1f,  0f),                                 // East
+            new( INVERTED_SQRT_OF_2,  INVERTED_SQRT_OF_2), // Northeast
+            new( 0f,  1f),                                 // North
+            new(-INVERTED_SQRT_OF_2,  INVERTED_SQRT_OF_2), // Northwest
+            new(-1f,  0f),                                 // West
+            new(-INVERTED_SQRT_OF_2, -INVERTED_SQRT_OF_2), // Southwest
+            new( 0f, -1f),                                 // South
+            new( INVERTED_SQRT_OF_2, -INVERTED_SQRT_OF_2), // Southeast
+        };
 
         private void OnValidate()
         {
