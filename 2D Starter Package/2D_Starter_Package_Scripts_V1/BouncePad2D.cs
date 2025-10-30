@@ -12,6 +12,25 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class BouncePad2D : MonoBehaviour
     {
+        // Defines possible bounce directions
+        public enum BounceDirection : byte
+        {
+            Up,
+            Down,
+            Left,
+            Right,
+            UpRight,
+            UpLeft,
+            DownRight,
+            DownLeft
+        }
+
+        public enum ForceMode : byte
+        {
+            AddForce,
+            OverrideForce
+        }
+
         [Tooltip("Enter the tag name that should register collisions. Leave blank for any object to be affected.")]
         [SerializeField] private string tagName;
 
@@ -26,25 +45,6 @@ namespace DigitalWorlds.StarterPackage2D
 
         [Space(20)]
         [SerializeField] private UnityEvent onBounce;
-
-        // Defines possible bounce directions
-        public enum BounceDirection
-        {
-            Up,
-            Down,
-            Left,
-            Right,
-            UpRight,
-            UpLeft,
-            DownRight,
-            DownLeft
-        }
-
-        public enum ForceMode
-        {
-            AddForce,
-            OverrideForce
-        }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
