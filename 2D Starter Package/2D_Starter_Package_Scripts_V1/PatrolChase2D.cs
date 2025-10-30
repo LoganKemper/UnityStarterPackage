@@ -23,7 +23,7 @@ namespace DigitalWorlds.StarterPackage2D
             public UnityEvent onPatrol;
         }
 
-        public enum ChaseMode
+        public enum ChaseMode : byte
         {
             Direct,
             HorizontalOnly,
