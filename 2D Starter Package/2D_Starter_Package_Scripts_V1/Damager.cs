@@ -43,7 +43,7 @@ namespace DigitalWorlds.StarterPackage2D
         }
     }
 
-    public enum Alignment
+    public enum Alignment : byte
     {
         Player,
         Enemy,
