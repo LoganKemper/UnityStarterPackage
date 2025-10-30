@@ -12,6 +12,23 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PlayerMovementAdvanced : PlayerMovement2D
     {
+        public enum DashCondition : byte
+        {
+            None,
+            Anytime,
+            WhenGrounded,
+            WhenAirborne
+        }
+
+        public enum DashDirection : byte
+        {
+            Horizontal,
+            Vertical,
+            UpwardsOnly,
+            HorizontalAndVertical,
+            OmniDirectional
+        }
+
         [Header("Dash Settings")]
         [Tooltip("The force applied during a dash.")]
         [SerializeField] private float dashForce = 30f;
@@ -56,34 +73,17 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("If true, wall jumping will require remaining jumps and will consume jumps.")]
         [SerializeField] private bool wallJumpingDepletesJumps = false;
 
+        private Vector2 dashDirection;
         private float dashCooldownCounter;
         private float gravityScale;
         private bool isDashing;
         private bool dashQueued;
-        private Vector2 dashDirection;
 
+        private Vector2 wallNormal;
         private float wallJumpLockCounter;
         private bool isTouchingWall;
         private bool isWallSliding;
         private bool isWallJumping;
-        private Vector2 wallNormal;
-
-        public enum DashCondition
-        {
-            None,
-            Anytime,
-            WhenGrounded,
-            WhenAirborne
-        }
-
-        public enum DashDirection
-        {
-            Horizontal,
-            Vertical,
-            UpwardsOnly,
-            HorizontalAndVertical,
-            OmniDirectional
-        }
 
         public void SetDash(int newCondition)
         {
