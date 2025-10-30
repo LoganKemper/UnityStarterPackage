@@ -22,6 +22,12 @@ namespace DigitalWorlds.StarterPackage2D
             public int itemCount = 1;
         }
 
+        private enum KeyLocation : byte
+        {
+            Inventory,
+            CollectableManager
+        }
+
         [Tooltip("Enter the tag name that should register collisions.")]
         [SerializeField] private string tagName;
 
@@ -43,12 +49,6 @@ namespace DigitalWorlds.StarterPackage2D
         [SerializeField] private UnityEvent onUnlocked, onUnlockFailed;
 
         private Inventory inventory;
-
-        private enum KeyLocation
-        {
-            Inventory,
-            CollectableManager
-        }
 
         private void Update()
         {
