@@ -32,7 +32,7 @@ namespace DigitalWorlds.StarterPackage2D
             public string LastInputY = "LastInputY";
         }
 
-        public enum PatrolType
+        public enum PatrolType : byte
         {
             Loop,
             PingPong,
