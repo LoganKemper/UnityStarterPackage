@@ -12,6 +12,15 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class CollectableEvents : MonoBehaviour
     {
+        public enum Condition : byte
+        {
+            None,
+            EqualTo,
+            NotEqualTo,
+            LessThanOrEqualTo,
+            GreaterThanOrEqualTo
+        }
+
         [Header("Collectable Conditions")]
         [Tooltip("Enter the target collectable count for the condition.")]
         [SerializeField] private int count;
@@ -26,15 +35,6 @@ namespace DigitalWorlds.StarterPackage2D
         [SerializeField] private UnityEvent onConditionCleared, onConditionFailed;
 
         private bool conditionUsed = false;
-
-        public enum Condition
-        {
-            None,
-            EqualTo,
-            NotEqualTo,
-            LessThanOrEqualTo,
-            GreaterThanOrEqualTo
-        }
 
         // Call this method from the CollectableManager
         public void CheckCondition(int count)
