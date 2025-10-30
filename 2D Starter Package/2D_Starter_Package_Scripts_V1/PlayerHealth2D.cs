@@ -14,7 +14,7 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PlayerHealth2D : MonoBehaviour
     {
-        public enum HealthType
+        public enum HealthType : byte
         {
             HealthBar,
             Segmented
