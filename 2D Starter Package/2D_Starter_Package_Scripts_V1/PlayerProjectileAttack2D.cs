@@ -2,6 +2,7 @@
 // University of Florida's Digital Worlds Institute
 // Written by Logan Kemper
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,6 +13,12 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class PlayerProjectileAttack2D : MonoBehaviour
     {
+        public enum LaunchDirection : byte
+        {
+            FacingDirection,
+            MousePosition
+        }
+
         [Header("Attack Settings")]
         [Tooltip("The button input used for the projectile attack. Set to left click (Mouse0) by default.")]
         [SerializeField] private KeyCode buttonInput = KeyCode.Mouse0;
@@ -28,23 +35,24 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("The initial velocity of the projectile.")]
         [SerializeField] private float velocity = 20f;
 
+        [Tooltip("Cooldown time between projectiles.")]
+        [SerializeField] private float cooldown = 0.05f;
+
         [Tooltip("Optional: Delay the spawning of the projectile. Leave at 0 to shoot immediately.")]
         [SerializeField] private float shootDelay = 0f;
 
+        [Tooltip("If set to MousePosition, the projectile will shoot towards the mouse cursor. Otherwise the projectile will shoot in the direction the player is facing.")]
+        [SerializeField] private LaunchDirection launchDirection = LaunchDirection.FacingDirection;
+
+        [Header("Ammo Settings")]
         [Tooltip("Whether the projectile attack requires ammunition to work.")]
         [SerializeField] private bool requireAmmo = false;
 
         [Tooltip("The current quantitiy of ammunition.")]
         [SerializeField] private int ammo = 0;
 
-        public enum LaunchDirection
-        {
-            FacingDirection,
-            MousePosition
-        }
-
-        [Tooltip("If set to MousePosition, the projectile will shoot towards the mouse cursor. Otherwise the projectile will shoot in the direction the player is facing.")]
-        [SerializeField] private LaunchDirection launchDirection = LaunchDirection.FacingDirection;
+        [Tooltip("How much ammo is consumed each shot.")]
+        [SerializeField] private int ammoCost = 1;
 
         [Space(20)]
         [SerializeField] private UnityEvent onProjectileLaunched, onNoAmmo;
@@ -53,11 +61,19 @@ namespace DigitalWorlds.StarterPackage2D
         [SerializeField] private UnityEvent<int> onAmmoChanged;
 
         private bool canShoot = true;
+        private bool isOnCooldown = false;
+        private bool isWaitingDelayedShot = false;
 
         // Call this from a UnityEvent to enable/disable shooting
-        public void EnableProjectileAttack(bool enableAttack)
+        public void EnableProjectileAttack(bool canShoot)
         {
-            canShoot = enableAttack;
+            this.canShoot = canShoot;
+        }
+
+        // Call this from a UnityEvent to enable/disable ammo being required to shoot
+        public void SetRequireAmmo(bool requireAmmo)
+        {
+            this.requireAmmo = requireAmmo;
         }
 
         // Call this from a UnityEvent to set the ammo count to a particular value
@@ -84,6 +100,12 @@ namespace DigitalWorlds.StarterPackage2D
             onAmmoChanged.Invoke(ammo);
         }
 
+        // Call this from a UnityEvent to set the ammo cost
+        public void SetAmmoCost(int ammoCost)
+        {
+            this.ammoCost = ammoCost;
+        }
+
         private void Start()
         {
             if (requireAmmo)
@@ -99,30 +121,33 @@ namespace DigitalWorlds.StarterPackage2D
 
         private void Update()
         {
-            if (Input.GetKeyDown(buttonInput) && canShoot)
+            if (Input.GetKeyDown(buttonInput) && canShoot && !isOnCooldown && !isWaitingDelayedShot)
             {
-                if (!requireAmmo || ammo > 0)
-                {
-                    // Only delay the Shoot method if shootDelay is greater than 0
-                    if (shootDelay <= 0f)
-                    {
-                        Shoot();
-                    }
-                    else
-                    {
-                        // This will invoke the Shoot method after shootDelay seconds
-                        Invoke(nameof(Shoot), shootDelay);
-                    }
-                }
-                else if (requireAmmo && ammo <= 0)
+                // If ammo is required, make sure we have enough for this shot
+                if (requireAmmo && ammo < ammoCost)
                 {
                     onNoAmmo.Invoke();
+                    return;
+                }
+
+                if (shootDelay <= 0f)
+                {
+                    // If there's no shoot delay, shoot right away
+                    Shoot();
+                }
+                else
+                {
+                    // Prevent stacking multiple invokes during delay
+                    isWaitingDelayedShot = true;
+                    Invoke(nameof(Shoot), shootDelay);
                 }
             }
         }
 
         private void Shoot()
         {
+            isWaitingDelayedShot = false;
+
             if (!canShoot)
             {
                 return;
@@ -130,7 +155,13 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (requireAmmo)
             {
-                ammo--;
+                if (ammo < ammoCost)
+                {
+                    onNoAmmo.Invoke();
+                    return;
+                }
+
+                ammo -= ammoCost;
                 onAmmoChanged.Invoke(ammo);
             }
 
@@ -146,16 +177,34 @@ namespace DigitalWorlds.StarterPackage2D
                 // Get the world position of the mouse cursor
                 Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-                // Calculate the vector from the launch transform to the mouse position
-                Vector2 launchDirection = mousePosition - (Vector2)launchTransform.position;
-
-                // Normalize the vector
-                launchDirection = launchDirection.normalized;
-
-                newProjectile.Launch(launchDirection, velocity, player);
+                // Calculate and normalize direction
+                Vector2 direction = (mousePosition - (Vector2)launchTransform.position).normalized;
+                newProjectile.Launch(direction, velocity, player);
             }
 
             onProjectileLaunched.Invoke();
+
+            if (cooldown > 0f)
+            {
+                StartCoroutine(CooldownCoroutine());
+            }
+        }
+
+        private IEnumerator CooldownCoroutine()
+        {
+            isOnCooldown = true;
+            yield return new WaitForSeconds(cooldown);
+            isOnCooldown = false;
+        }
+
+        private void OnDisable()
+        {
+            // Clean up any pending delayed shot when component is disabled
+            if (isWaitingDelayedShot)
+            {
+                CancelInvoke(nameof(Shoot));
+                isWaitingDelayedShot = false;
+            }
         }
 
         private void OnValidate()
@@ -164,6 +213,7 @@ namespace DigitalWorlds.StarterPackage2D
             velocity = Mathf.Max(0f, velocity);
             shootDelay = Mathf.Max(0f, shootDelay);
             ammo = Mathf.Max(0, ammo);
+            cooldown = Mathf.Max(0, cooldown);
         }
     }
 }
