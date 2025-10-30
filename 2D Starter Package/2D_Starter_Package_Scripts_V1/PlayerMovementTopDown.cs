@@ -31,6 +31,14 @@ namespace DigitalWorlds.StarterPackage2D
             public string LastInputY = "LastInputY";
         }
 
+        public enum MovementMode : byte
+        {
+            EightDirections,
+            FourDirections,
+            VerticalOnly,
+            HorizontalOnly
+        }
+
         [Header("Animation Settings")]
         [Tooltip("Drag in the player's animator to play running and idle animations.")]
         [SerializeField] private Animator animator;
@@ -53,14 +61,6 @@ namespace DigitalWorlds.StarterPackage2D
         private Rigidbody2D rb;
         private Vector2 movementInput;
         private bool canMove = true;
-
-        public enum MovementMode
-        {
-            EightDirections,
-            FourDirections,
-            VerticalOnly,
-            HorizontalOnly
-        }
 
         public void EnableMovement(bool isEnabled)
         {
