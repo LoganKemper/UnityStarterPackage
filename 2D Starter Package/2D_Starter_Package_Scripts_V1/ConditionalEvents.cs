@@ -12,6 +12,15 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class ConditionalEvents : MonoBehaviour
     {
+        public enum Condition : byte
+        {
+            None,
+            EqualTo,
+            NotEqualTo,
+            LessThanOrEqualTo,
+            GreaterThanOrEqualTo
+        }
+
         [System.Serializable]
         public class CounterCondition
         {
@@ -39,14 +48,8 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("If enabled, all conditions will be evaluated once on Start using the initial count.")]
         [SerializeField] private bool evaluateOnStart = true;
 
-        public enum Condition
-        {
-            None,
-            EqualTo,
-            NotEqualTo,
-            LessThanOrEqualTo,
-            GreaterThanOrEqualTo
-        }
+        [Tooltip("If disabled, the conditions will NOT be evaluated when this component is inactive.")]
+        [SerializeField] private bool evaluateWhenInactive = true;
 
         private void Start()
         {
@@ -98,6 +101,11 @@ namespace DigitalWorlds.StarterPackage2D
         private void CountChanged()
         {
             if (counterConditions == null)
+            {
+                return;
+            }
+
+            if (!evaluateWhenInactive && !isActiveAndEnabled)
             {
                 return;
             }
