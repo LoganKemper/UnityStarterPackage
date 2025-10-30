@@ -11,6 +11,14 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class Parallax : MonoBehaviour
     {
+        public enum LoopMode : byte
+        {
+            None,       // No looping, just parallaxing
+            Horizontal, // Loop horizontally
+            Vertical,   // Loop vertically
+            Both        // Loop horizontally and vertically
+        }
+
         [Tooltip("Drag in the main camera. If left empty, the script will try to find the main camera in the scene.")]
         [SerializeField] private Transform mainCamera;
 
@@ -25,14 +33,6 @@ namespace DigitalWorlds.StarterPackage2D
 
         [Tooltip("Select how the parallax should loop, if at all.")]
         [SerializeField] private LoopMode loopMode = LoopMode.None;
-
-        public enum LoopMode
-        {
-            None,       // No looping, just parallaxing
-            Horizontal, // Loop horizontally
-            Vertical,   // Loop vertically
-            Both        // Loop horizontally and vertically
-        }
 
         private Vector3 startPos;
         private float spriteWidth, spriteHeight;
