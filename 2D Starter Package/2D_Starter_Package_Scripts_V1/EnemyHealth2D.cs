@@ -71,6 +71,7 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (healthBar != null)
             {
+                healthBar.wholeNumbers = false;
                 healthBar.minValue = 0f;
                 healthBar.maxValue = 1f;
                 healthBar.value = 1f;
