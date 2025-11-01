@@ -158,6 +158,34 @@ namespace DigitalWorlds.StarterPackage2D
             UpdateHealthUI();
         }
 
+        public void SetHealthWithoutDying(int newHealth)
+        {
+            if (isDying)
+            {
+                return;
+            }
+
+            if (newHealth > currentHealth)
+            {
+                onPlayerHealed.Invoke();
+            }
+            else if (newHealth < currentHealth && newHealth > 0)
+            {
+                onPlayerDamaged.Invoke();
+            }
+
+            if (allowOverhealing)
+            {
+                currentHealth = Mathf.Max(0, newHealth);
+            }
+            else
+            {
+                currentHealth = Mathf.Clamp(newHealth, 0, maxHealth);
+            }
+
+            UpdateHealthUI();
+        }
+
         private void Die()
         {
             onPlayerDeath.Invoke();
@@ -368,10 +396,10 @@ namespace DigitalWorlds.StarterPackage2D
             // Make sure invincibilityTime can't be negative
             invincibilityTime = Mathf.Max(0, invincibilityTime);
 
-            // Make sure currentHealth can't be less than 1 or greater than maxHealth (if allowOverhealing is false)
-            if (currentHealth < 1)
+            // Make sure currentHealth can't be less than 0 or greater than maxHealth (if allowOverhealing is false)
+            if (currentHealth < 0)
             {
-                currentHealth = 1;
+                currentHealth = 0;
             }
             else if (currentHealth > maxHealth && !allowOverhealing)
             {
