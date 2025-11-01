@@ -12,32 +12,63 @@ namespace DigitalWorlds.StarterPackage2D
     /// </summary>
     public class FlickeringLight2D : MonoBehaviour
     {
+        [Tooltip("Drag in the target Light2D component.")]
         [SerializeField] private Light2D light2D;
+
+        [Tooltip("Set a minimum intensity for the light.")]
         [SerializeField] private float minIntensity = 0.1f;
-        [SerializeField] private float maxIntensity = 1f;
+
+        [Tooltip("Set a maximum intensity for the light.")]
+        [SerializeField] private float maxIntensity = 2f;
+
+        [Tooltip("How frequently the light flickers.")]
         [SerializeField] private float frequency = 1f;
 
-        private float randomSeed;
+        private float baseIntensity;
+
+        public void SetMinIntensity(float minIntensity)
+        {
+            this.minIntensity = minIntensity;
+        }
+
+        public void SetMaxIntensity(float maxIntensity)
+        {
+            this.maxIntensity = maxIntensity;
+        }
+
+        public void SetFrequency(float frequency)
+        {
+            this.frequency = frequency;
+        }
+
+        public void SetBaseIntensity(float baseIntensity)
+        {
+            this.baseIntensity = baseIntensity;
+        }
 
         private void Start()
         {
-            // Generate a random number for use in the Perlin noise generator
-            randomSeed = Random.Range(0f, 65535f);
+            if (light2D == null)
+            {
+                return;
+            }
+
+            // Cache the original intensity
+            baseIntensity = light2D.intensity;
         }
 
         private void Update()
         {
-            // Return early if the light has not been assigned
             if (light2D == null)
             {
                 return;
             }
 
             // Perlin noise can be used to efficiently generate pseudo-random patterns of numbers
-            float noise = Mathf.PerlinNoise(randomSeed, Time.time * frequency);
+            float flicker = Mathf.PerlinNoise(Time.time * frequency, 0f);
+            float targetIntensity = Mathf.Lerp(minIntensity, maxIntensity, flicker);
 
-            // Flicker the intensity using the noise value
-            light2D.intensity = Mathf.Lerp(minIntensity, maxIntensity, noise);
+            light2D.intensity = targetIntensity * baseIntensity;
         }
     }
 }
