@@ -27,7 +27,7 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (string.IsNullOrEmpty(tagName) || collision.CompareTag(tagName))
             {
-                onTrigger.Invoke();
+                Trigger();
             }
         }
 
@@ -40,8 +40,20 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (string.IsNullOrEmpty(tagName) || collision.CompareTag(tagName))
             {
-                onTriggerExit.Invoke();
+                TriggerExit();
             }
+        }
+
+        [ContextMenu("Invoke Trigger Event")]
+        public void Trigger()
+        {
+            onTrigger.Invoke();
+        }
+
+        [ContextMenu("Invoke Trigger Exit Event")]
+        public void TriggerExit()
+        {
+            onTriggerExit.Invoke();
         }
     }
 }

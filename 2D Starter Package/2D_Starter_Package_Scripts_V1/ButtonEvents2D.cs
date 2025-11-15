@@ -36,11 +36,11 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (Input.GetKeyDown(keyToPress) && (entered || !requiresTrigger))
             {
-                onButtonActivated.Invoke();
+                ButtonActivated();
             }
             else if (Input.GetKeyUp(keyToPress) && (entered || !requiresTrigger))
             {
-                onButtonReleased.Invoke();
+                ButtonReleased();
             }
         }
 
@@ -58,6 +58,18 @@ namespace DigitalWorlds.StarterPackage2D
             {
                 entered = false;
             }
+        }
+
+        [ContextMenu("Invoke Button Activated Event")]
+        public void ButtonActivated()
+        {
+            onButtonActivated.Invoke();
+        }
+
+        [ContextMenu("Invoke Button Released Event")]
+        public void ButtonReleased()
+        {
+            onButtonReleased.Invoke();
         }
     }
 }

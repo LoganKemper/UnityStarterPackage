@@ -90,6 +90,7 @@ namespace DigitalWorlds.StarterPackage2D
             onConditionFailed.Invoke();
         }
 
+        [ContextMenu("Invoke Condition Cleared Event")]
         public void ConditionCleared()
         {
             conditionUsed = true;

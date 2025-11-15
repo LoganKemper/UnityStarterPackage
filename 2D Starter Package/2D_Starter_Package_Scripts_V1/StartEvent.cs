@@ -18,5 +18,11 @@ namespace DigitalWorlds.StarterPackage2D
         {
             onStartEvent.Invoke();
         }
+
+        [ContextMenu("Invoke Event")]
+        public void InvokeEvent()
+        {
+            onStartEvent.Invoke();
+        }
     }
 }
