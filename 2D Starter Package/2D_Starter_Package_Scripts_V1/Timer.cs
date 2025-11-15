@@ -34,12 +34,23 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Choose whether the timer should count up or down.")]
         [SerializeField] private TimerDirection timerDirection = TimerDirection.CountDown;
 
+        [Tooltip("Choose whether the timer should begin right away (in the component's Start method).")]
+        [SerializeField] private bool startTimerOnStart = false;
+
         [Space(20)]
         [SerializeField] private UnityEvent onTimerFinished;
 
         private float timer;
         private bool timerInProgress;
         private bool isPaused;
+
+        private void Start()
+        {
+            if (startTimerOnStart)
+            {
+                StartTimer();
+            }
+        }
 
         // Call from a UnityEvent to begin the timer
         [ContextMenu("Start Timer")]
