@@ -21,7 +21,13 @@ namespace DigitalWorlds.StarterPackage2D
         public bool isUnique;
 
         [Space(20)]
-        public UnityEvent onPickedUp;
+        [SerializeField] private UnityEvent onPickedUp;
+
+        [ContextMenu("Invoke Picked Up Event")]
+        public void InvokePickedUpEvent()
+        {
+            onPickedUp.Invoke();
+        }
 
         public void SetDestroyOnPickup(bool destroyOnPickup)
         {

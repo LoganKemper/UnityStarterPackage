@@ -113,7 +113,7 @@ namespace DigitalWorlds.StarterPackage2D
             AddItemToInventory(item.itemData);
 
             // Invoke UnityEvents on both the item and the inventory
-            item.onPickedUp.Invoke();
+            item.InvokePickedUpEvent();
             onItemPickedUp.Invoke();
 
             return true;
