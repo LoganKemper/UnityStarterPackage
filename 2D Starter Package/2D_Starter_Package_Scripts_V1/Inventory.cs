@@ -17,6 +17,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Optional: Assign a layout group on the UI to display the current items in the inventory.")]
         [SerializeField] private LayoutGroup layoutGroup;
 
+        [Tooltip("Set the width (x) and height (y) for the inventory item's RectTransform on the UI.")]
+        [SerializeField] private Vector2 inventoryRectSize = new(100f, 100f);
+
         [Tooltip("The maximum number of items that can be in the inventory at once.")]
         [SerializeField] private int maxItems = 10;
 
@@ -30,6 +33,16 @@ namespace DigitalWorlds.StarterPackage2D
         [SerializeField] private UnityEvent onItemPickedUp;
 
         private static List<ItemData> items = new();
+
+        public void SetMaxItems(int maxItems)
+        {
+            this.maxItems = maxItems;
+        }
+
+        public void SetAutoPickUpItems(bool autoPickUpItems)
+        {
+            this.autoPickUpItems = autoPickUpItems;
+        }
 
         private void Start()
         {
@@ -99,12 +112,8 @@ namespace DigitalWorlds.StarterPackage2D
 
             AddItemToInventory(item.itemData);
 
-            // Play the item's pickup sound
-            if (item.pickupSound != null)
-            {
-                AudioSource.PlayClipAtPoint(item.pickupSound, transform.position);
-            }
-
+            // Invoke UnityEvents on both the item and the inventory
+            item.onPickedUp.Invoke();
             onItemPickedUp.Invoke();
 
             return true;
@@ -159,6 +168,7 @@ namespace DigitalWorlds.StarterPackage2D
             image.preserveAspect = true;
             newItem.transform.SetParent(layoutGroup.transform);
             newItem.transform.localScale = Vector3.one;
+            image.rectTransform.sizeDelta = inventoryRectSize;
         }
 
         // Delete an item from the inventory and layout group, given its name
