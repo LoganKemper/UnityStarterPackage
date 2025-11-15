@@ -106,6 +106,12 @@ namespace DigitalWorlds.StarterPackage2D
             this.ammoCost = ammoCost;
         }
 
+        // Call this from a UnityEvent to set the cooldown time
+        public void SetCooldown(float cooldown)
+        {
+            this.cooldown = cooldown;
+        }
+
         private void Start()
         {
             if (requireAmmo)

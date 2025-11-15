@@ -43,7 +43,7 @@ namespace DigitalWorlds.StarterPackage2D
 
             if (playerMovement == null)
             {
-                Debug.LogWarning("Make sure PlayerAudio2D is attached to a GameObject with PlayerMovement2D!");
+                Debug.LogWarning("Make sure PlayerAudio2D is attached to a GameObject with a player movement component!");
             }
 
             // Subscribe to player movement events

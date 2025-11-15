@@ -23,7 +23,7 @@ namespace DigitalWorlds.StarterPackage2D
             public UnityEvent onViewBegan, onViewEnded;
         }
 
-        [Tooltip("The transform that the camera will follow.")]
+        [Tooltip("The transform that the camera will follow (likely the player).")]
         [SerializeField] private Transform target;
 
         [Tooltip("How quickly the camera keeps up with the target. A higher value will follow the target more closely.")]

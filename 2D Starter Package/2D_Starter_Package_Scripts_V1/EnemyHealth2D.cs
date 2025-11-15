@@ -33,12 +33,6 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Time in seconds that the enemy will be invincible after taking damage.")]
         [SerializeField] private float invincibilityTime = 0.1f;
 
-        [Tooltip("Optional: Sound effect when enemy is hit.")]
-        [SerializeField] private AudioClip hitSound;
-
-        [Tooltip("Optional: Sound effect when enemy is destroyed.")]
-        [SerializeField] private AudioClip deathSound;
-
         [Tooltip("Delay (in seconds) before the enemy is destroyed after losing all its health. Increase this if the enemy is being destroyed before its death animation fully plays.")]
         [SerializeField] private float delayBeforeDying = 0f;
 
@@ -186,12 +180,6 @@ namespace DigitalWorlds.StarterPackage2D
             {
                 StopInvincibility();
 
-                // Play death sound if it has been assigned
-                if (deathSound != null)
-                {
-                    AudioSource.PlayClipAtPoint(deathSound, transform.position);
-                }
-
                 // If the animator has been assigned, send it a trigger
                 if (animator != null)
                 {
@@ -211,12 +199,6 @@ namespace DigitalWorlds.StarterPackage2D
             }
             else if (damage > 0)
             {
-                // Play hit sound if it has been assigned
-                if (hitSound != null)
-                {
-                    AudioSource.PlayClipAtPoint(hitSound, transform.position);
-                }
-
                 // If the animator has been assigned, send it a trigger
                 if (animator != null)
                 {

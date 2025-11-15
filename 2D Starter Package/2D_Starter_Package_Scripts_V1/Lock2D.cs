@@ -29,7 +29,7 @@ namespace DigitalWorlds.StarterPackage2D
         }
 
         [Tooltip("Enter the tag name that should register collisions.")]
-        [SerializeField] private string tagName;
+        [SerializeField] private string tagName = "Player";
 
         [Tooltip("Choose whether to check for the required item in the player's inventory or in the collectable manager.")]
         [SerializeField] private KeyLocation keyLocation = KeyLocation.Inventory;
