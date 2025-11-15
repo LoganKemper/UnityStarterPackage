@@ -233,7 +233,7 @@ namespace DigitalWorlds.StarterPackage2D
             }
         }
 
-        public virtual void CheckDirectionToFace(bool isMovingRight)
+        protected void CheckDirectionToFace(bool isMovingRight)
         {
             if (isMovingRight != isFacingRight)
             {
@@ -257,7 +257,7 @@ namespace DigitalWorlds.StarterPackage2D
             }
         }
 
-        public virtual void Turn()
+        public void Turn()
         {
             // Flip the player's transform on the x-axis
             transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);

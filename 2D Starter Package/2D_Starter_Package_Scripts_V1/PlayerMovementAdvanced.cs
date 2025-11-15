@@ -30,6 +30,9 @@ namespace DigitalWorlds.StarterPackage2D
         }
 
         [Header("Dash Settings")]
+        [Tooltip("The button input used for dashing. Set to left shift by default.")]
+        [SerializeField] private KeyCode dashInput = KeyCode.LeftShift;
+
         [Tooltip("The force applied during a dash.")]
         [SerializeField] private float dashForce = 30f;
 
@@ -48,7 +51,7 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("If checked, the player's gravity will be temporarily disabled during the dash.")]
         [SerializeField] private bool disableGravityDuringDash = true;
 
-        [Header("Wall Jumping")]
+        [Header("Wall Jump Settings")]
         [Tooltip("Enable/disable wall jumping and sliding.")]
         [SerializeField] private bool canWallJump = true;
 
@@ -90,6 +93,11 @@ namespace DigitalWorlds.StarterPackage2D
             dashCondition = (DashCondition)newCondition;
         }
 
+        public void SetDashDirection(int newDirection)
+        {
+            dashDirectionMode = (DashDirection)newDirection;
+        }
+
         public void SetWallJumping(bool enabled)
         {
             canWallJump = enabled;
@@ -98,6 +106,7 @@ namespace DigitalWorlds.StarterPackage2D
         protected override void Start()
         {
             base.Start();
+
             gravityScale = rb.gravityScale;
         }
 
@@ -105,8 +114,8 @@ namespace DigitalWorlds.StarterPackage2D
         {
             base.Update();
 
-            // Handle dash input (using left shift key by default)
-            if (Input.GetKeyDown(KeyCode.LeftShift) && canMove && dashCooldownCounter <= 0f && !isDashing)
+            // Handle dash input
+            if (Input.GetKeyDown(dashInput) && canMove && dashCooldownCounter <= 0f && !isDashing)
             {
                 // Check if dash is allowed based on ground state
                 if (dashCondition == DashCondition.Anytime ||
