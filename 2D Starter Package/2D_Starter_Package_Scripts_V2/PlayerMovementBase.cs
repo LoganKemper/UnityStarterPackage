@@ -20,27 +20,27 @@ namespace DigitalWorlds.StarterPackage2D
         public event Action<bool> OnRunningStateChanged;
         public event Action OnDash;
 
-        protected virtual void OnJumpEvent()
+        protected void OnJumpEvent()
         {
             OnJump?.Invoke();
         }
 
-        protected virtual void OnMidAirJumpEvent()
+        protected void OnMidAirJumpEvent()
         {
             OnMidAirJump?.Invoke();
         }
 
-        protected virtual void OnLandEvent()
+        protected void OnLandEvent()
         {
             OnLand?.Invoke();
         }
 
-        protected virtual void OnRunningStateChangedEvent(bool isRunning)
+        protected void OnRunningStateChangedEvent(bool isRunning)
         {
             OnRunningStateChanged?.Invoke(isRunning);
         }
 
-        protected virtual void OnDashEvent()
+        protected void OnDashEvent()
         {
             OnDash?.Invoke();
         }
