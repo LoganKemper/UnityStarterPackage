@@ -60,6 +60,26 @@ namespace DigitalWorlds.StarterPackage2D
             playerTransform = newTarget;
         }
 
+        public void SetFireRate(float fireRate)
+        {
+            this.fireRate = fireRate;
+        }
+
+        public void SetFireRateVariation(float fireRateVariation)
+        {
+            this.fireRateVariation = fireRateVariation;
+        }
+
+        public void SetVelocity(float velocity)
+        {
+            this.velocity = velocity;
+        }
+
+        public void SetMaxDistanceFromPlayer(float maxDistanceFromPlayer)
+        {
+            this.maxDistanceFromPlayer = maxDistanceFromPlayer;
+        }
+
         private void Start()
         {
             // If the player's transform has not been assigned, try to find it by tag
