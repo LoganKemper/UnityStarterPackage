@@ -35,9 +35,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Space(20)]
         [SerializeField] private UnityEvent<int> onScoreChanged;
 
-        private string scoreID;
-        private int score = 0;
         private static Dictionary<string, int> instanceScores = new();
+        private string scoreID;
+        private int score;
 
         private void Awake()
         {

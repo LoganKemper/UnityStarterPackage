@@ -22,7 +22,8 @@ namespace DigitalWorlds.StarterPackage2D
             [Tooltip("Enable to prevent the health stage from being activated multiple times.")]
             public bool singleUse = true;
 
-            [System.NonSerialized] public bool stageUsed = false;
+            [System.NonSerialized] public bool stageUsed;
+
             public UnityEvent onStageReached;
         }
 

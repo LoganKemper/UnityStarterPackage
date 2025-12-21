@@ -24,8 +24,8 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Set this to true if you want this GameObject to flip itself on the x-axis when it reaches the end of its patrol path.")]
         [SerializeField] private bool flipOnDirectionChanged;
 
-        private bool isRight = true;
         private Vector3 pointAPosition;
+        private bool isRight = true;
 
         private void Start()
         {

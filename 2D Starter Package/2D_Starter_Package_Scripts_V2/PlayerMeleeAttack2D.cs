@@ -49,13 +49,13 @@ namespace DigitalWorlds.StarterPackage2D
         [SerializeField] private Events events;
 
         private Coroutine meleeCoroutine;
+        private float cooldownTimer;
         private bool canMelee = true;
-        private float cooldownTimer = 0;
 
         // Call from a UnityEvent to enable or disable the attack
-        public void EnableMeleeAttack(bool enableAttack)
+        public void EnableMeleeAttack(bool canMelee)
         {
-            canMelee = enableAttack;
+            this.canMelee = canMelee;
         }
 
         public void SetHitboxTime(float hitboxTime)

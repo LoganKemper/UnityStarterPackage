@@ -9,7 +9,8 @@ using TMPro;
 namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
-    /// Generic script for counting down time. Can be used to display a timer on the UI, or just to delay an action by a specified amount of time.
+    /// Generic script for counting down time. 
+    /// Can be used to display a timer on the UI, or just to delay an action by a specified amount of time.
     /// </summary>
     public class Timer : MonoBehaviour
     {

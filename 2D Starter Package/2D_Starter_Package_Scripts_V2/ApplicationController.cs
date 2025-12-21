@@ -8,7 +8,7 @@ using UnityEngine.Events;
 namespace DigitalWorlds.StarterPackage2D
 {
     /// <summary>
-    /// Provides functionality for quitting or pausing the game.
+    /// Provides functionality for quitting and pausing the game.
     /// </summary>
     public class ApplicationController : MonoBehaviour
     {

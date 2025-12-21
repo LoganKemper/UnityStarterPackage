@@ -12,7 +12,7 @@ namespace DigitalWorlds.StarterPackage2D
     public class Projectile2D : MonoBehaviour
     {
         [Tooltip("Drag in the projectile's Rigidbody2D.")]
-        [SerializeField] private Rigidbody2D m_Rigidbody2D;
+        [SerializeField] private Rigidbody2D _rigidbody2D;
 
         [Tooltip("How long in seconds until the projectile disappears.")]
         [SerializeField] private float lifetime = 2f;
@@ -37,9 +37,9 @@ namespace DigitalWorlds.StarterPackage2D
             Destroy(gameObject, lifetime);
 
             // If the Rigidbody2D hasn't been assigned, try to find it on this GameObject
-            if (m_Rigidbody2D == null)
+            if (_rigidbody2D == null)
             {
-                m_Rigidbody2D = GetComponent<Rigidbody2D>();
+                _rigidbody2D = GetComponent<Rigidbody2D>();
             }
         }
 
@@ -53,7 +53,7 @@ namespace DigitalWorlds.StarterPackage2D
                 launcherOrigin = origin;
             }
 
-            m_Rigidbody2D.linearVelocityX = emitVelocity * relativeVelocity;
+            _rigidbody2D.linearVelocityX = emitVelocity * relativeVelocity;
 
             // Flip the transform on the x-axis if it's not facing right
             if (!facingRight)
@@ -72,7 +72,7 @@ namespace DigitalWorlds.StarterPackage2D
                 launcherOrigin = origin;
             }
 
-            m_Rigidbody2D.linearVelocity = direction * emitVelocity;
+            _rigidbody2D.linearVelocity = direction * emitVelocity;
 
             if (rotateToTarget)
             {
@@ -117,10 +117,7 @@ namespace DigitalWorlds.StarterPackage2D
         private void OnValidate()
         {
             // Force lifetime to be 0 or greater
-            if (lifetime < 0)
-            {
-                lifetime = 0;
-            }
+            lifetime = Mathf.Max(0, lifetime);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace DigitalWorlds.StarterPackage2D
         [Space(20)]
         [SerializeField] private UnityEvent onConditionCleared, onConditionFailed;
 
-        private bool conditionUsed = false;
+        private bool conditionUsed;
 
         // Call this method from the CollectableManager
         public void CheckCondition(int count)

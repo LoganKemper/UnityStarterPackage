@@ -23,8 +23,8 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("Choose between moving in local or world space.")]
         [SerializeField] private Space space = Space.World;
 
-        private Vector3 positionOffset = new();
-        private Vector3 tempPosition = new();
+        private Vector3 positionOffset;
+        private Vector3 tempPosition;
 
         private void Start()
         {
