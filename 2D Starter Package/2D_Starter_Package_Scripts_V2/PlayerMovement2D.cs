@@ -44,6 +44,9 @@ namespace DigitalWorlds.StarterPackage2D
         [Tooltip("The player's movement velocity.")]
         [SerializeField] protected float movementSpeed = 15f;
 
+        [Tooltip("The button input used for jump. Set to the space bar by default.")]
+        [SerializeField] protected KeyCode jumpKey = KeyCode.Space;
+
         [Tooltip("Choose how many jumps the player is allowed before returning to the ground.")]
         [SerializeField] protected int jumps = 1;
 
@@ -111,7 +114,7 @@ namespace DigitalWorlds.StarterPackage2D
         protected virtual void Update()
         {
             // Handle jump input
-            if (Input.GetButtonDown("Jump") && canMove)
+            if (Input.GetKeyDown(jumpKey) && canMove)
             {
                 if (jumpsRemaining > 0 || coyoteTimeCounter > 0f)
                 {
@@ -267,6 +270,17 @@ namespace DigitalWorlds.StarterPackage2D
             {
                 facingTransform.rotation *= Quaternion.Euler(0f, 180f, 0f);
             }
+        }
+
+        protected virtual void OnValidate()
+        {
+            // Enforce value ranges in the inspector
+            groundCheckRadius = Mathf.Max(0.0001f, groundCheckRadius);
+            movementSpeed = Mathf.Max(0f, movementSpeed);
+            jumps = Mathf.Max(0, jumps);
+            jumpForce = Mathf.Max(0f, jumpForce);
+            jumpBuffer = Mathf.Clamp(jumpBuffer, 0f, 1f);
+            coyoteTime = Mathf.Clamp(coyoteTime, 0f, 1f);
         }
     }
 }

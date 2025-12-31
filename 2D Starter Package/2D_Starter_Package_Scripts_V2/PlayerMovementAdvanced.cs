@@ -368,5 +368,16 @@ namespace DigitalWorlds.StarterPackage2D
             // Start the cooldown
             dashCooldownCounter = dashCooldown;
         }
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            dashForce = Mathf.Max(0f, dashForce);
+            dashDuration = Mathf.Max(0f, dashDuration);
+            dashCooldown = Mathf.Max(0f, dashCooldown);
+            wallCheckRadius = Mathf.Max(0.0001f, wallCheckRadius);
+            wallJumpLockTime = Mathf.Max(0f, wallJumpLockTime);
+        }
     }
 }

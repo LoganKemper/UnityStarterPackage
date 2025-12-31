@@ -183,7 +183,7 @@ namespace DigitalWorlds.StarterPackage2D
                     break;
 
                 default:
-                    direction = new Vector3(movementInput.x, movementInput.y, 0).normalized;
+                    direction = (Vector3)movementInput.normalized;
                     break;
             }
 
@@ -196,6 +196,12 @@ namespace DigitalWorlds.StarterPackage2D
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                 facingTransform.localRotation = Quaternion.Euler(0f, 0f, angle);
             }
+        }
+
+        private void OnValidate()
+        {
+            // Enforce minimum values in the inspector
+            movementSpeed = Mathf.Max(0f, movementSpeed);
         }
     }
 }
