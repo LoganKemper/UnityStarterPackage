@@ -127,9 +127,11 @@ namespace DigitalWorlds.StarterPackage3D
             ResetMovement();
         }
 
-        private void Start()
+        private void Awake()
         {
             rb = GetComponent<Rigidbody>();
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+
             yaw = transform.eulerAngles.y;
             currentCameraDistance = cameraDistance;
 
@@ -325,6 +327,17 @@ namespace DigitalWorlds.StarterPackage3D
         private bool CheckIfGrounded()
         {
             return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
+        }
+
+        private void OnValidate()
+        {
+            // Enforce value ranges in the inspector
+            groundCheckRadius = Mathf.Max(0.0001f, groundCheckRadius);
+            movementSpeed = Mathf.Max(0f, movementSpeed);
+            jumps = Mathf.Max(0, jumps);
+            jumpForce = Mathf.Max(0f, jumpForce);
+            jumpBuffer = Mathf.Clamp(jumpBuffer, 0f, 1f);
+            coyoteTime = Mathf.Clamp(coyoteTime, 0f, 1f);
         }
     }
 }
