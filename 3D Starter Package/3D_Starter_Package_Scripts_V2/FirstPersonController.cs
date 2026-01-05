@@ -16,6 +16,9 @@ namespace DigitalWorlds.StarterPackage3D
         [Tooltip("Drag in the first-person camera.")]
         [SerializeField] private Camera firstPersonCamera;
 
+        [Tooltip("If true, mouse input will not move the camera.")]
+        [SerializeField] private bool lockCamera = false;
+
         [Tooltip("Mouse input sensitivity of the first-person camera.")]
         [Range(0.1f, 8f), SerializeField] private float sensitivity = 2f;
 
@@ -76,16 +79,15 @@ namespace DigitalWorlds.StarterPackage3D
         private bool isGrounded;
         private bool wasRunning;
         private bool canMove = true;
-        private bool canLook = true;
 
         public void EnableMovement(bool movementEnabled)
         {
             canMove = movementEnabled;
         }
 
-        public void EnableLooking(bool lookEnabled)
+        public void LockCamera(bool lockCamera)
         {
-            canLook = lookEnabled;
+            this.lockCamera = lockCamera;
         }
 
         public void ResetMovement()
@@ -140,7 +142,7 @@ namespace DigitalWorlds.StarterPackage3D
                 jumpBufferCounter -= Time.deltaTime;
             }
 
-            if (canLook)
+            if (!lockCamera)
             {
                 Look();
             }

@@ -110,9 +110,9 @@ namespace DigitalWorlds.StarterPackage3D
             canMove = movementEnabled;
         }
 
-        public void LockCamera(bool cameraLocked)
+        public void LockCamera(bool lockCamera)
         {
-            lockCamera = cameraLocked;
+            this.lockCamera = lockCamera;
         }
 
         public void ResetMovement()
