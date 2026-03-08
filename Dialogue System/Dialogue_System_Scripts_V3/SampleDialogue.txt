@@ -1,0 +1,5 @@
+[NAME=Player] Hello!
+[NAME=NPC] I like your hat.
+[NAME=Player] I do not like your hat.
+[NAME=NPC] Goodbye.
+[NAME=Player] Goodbye.
